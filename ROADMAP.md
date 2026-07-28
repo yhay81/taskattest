@@ -35,13 +35,85 @@ binding, no-clobber evidence storage, and independent verification.
 - Re-run planning that distinguishes environment equivalence from receipt
   verification.
 
-## 1.0 gates
+## v1.0 quality criteria
 
-- Stable receipt and configuration compatibility policy.
-- Published discovery benchmark and documented false-positive/false-negative
-  targets.
-- Reproducible cross-platform releases with provenance and SBOMs.
-- Security review of execution, process cleanup, storage, and verification.
-- At least three opt-in external workflows recorded in [ADOPTERS.md](ADOPTERS.md).
-- Maintainer runbook, succession path, support policy, and two consecutive
-  compatibility-preserving minor releases.
+TaskAttest reaches v1.0 only when every gate below has published,
+reproducible evidence. More discovered commands, receipts, downloads, or stars
+do not substitute for accurate discovery, bounded execution, or real use.
+
+### Product and compatibility
+
+- CLI, configuration, discovery, selection, progress, receipt, log-reference,
+  verification, schema, error, and exit-code contracts remain compatible across
+  at least two released pre-1.0 minor versions.
+- Golden workspaces and receipts from every supported contract version are
+  accepted by the current verifier or have a tested migration command and
+  migration guide.
+- Receipt verification remains offline and never reruns a check, resolves a
+  tool from `PATH`, or trusts a stored outcome without validating its canonical
+  payload and referenced blobs.
+- Environment equivalence, non-hermetic inputs, source identity, and discovery
+  gaps remain explicit rather than being promoted to stronger attestation.
+
+### Discovery accuracy, correctness, and security
+
+- A published labeled corpus contains at least 100 representative projects,
+  with at least 20 each for JavaScript/TypeScript, Python, Rust, and Go plus
+  mixed and monorepo fixtures.
+- On that corpus, check discovery achieves at least 95% precision and 90%
+  recall overall, publishes per-ecosystem results, and emits a coverage gap
+  instead of guessing when a safe argv command cannot be modeled.
+- The workflow corpus has zero arbitrary expression, shell fragment,
+  configuration code, or package script execution during discovery.
+- The adversarial receipt corpus has 100% rejection of payload, digest, source,
+  log, selection, outcome, and schema mutations.
+- Cross-platform stress completes 10,000 aggregate timeout, cancellation,
+  log-limit, spawn-failure, normal-exit, and orphan-descendant lifecycle
+  iterations without a surviving owned process, hung capture pipe, or passing
+  receipt for changed source.
+- An independent security review covers command discovery, argument handling,
+  environment forwarding, process trees, cancellation races, log storage,
+  redaction, no-clobber publication, receipt integrity, and offline
+  verification; all critical and high findings are resolved.
+- No known critical or high-severity vulnerability is open at release time.
+
+### Performance and bounds
+
+- Discovery and selection for the published 10,000-file, 100-check workspace
+  complete below 2 seconds p95 on the documented GitHub-hosted runner.
+- Offline verification of the published 100-check receipt completes below
+  1 second p95, including all referenced-blob digests.
+- Peak resident memory remains below 256 MiB for every published bounded
+  fixture.
+- Runtime, combined log bytes, diagnostic summaries, receipt size, environment
+  names, and stored artifacts never exceed configured bounds without an
+  explicit structured outcome.
+- Corpus labels, runner images, raw measurements, and regression thresholds
+  are versioned with the repository.
+
+### Delivery and maintenance
+
+- Required CI remains green on Linux, macOS, and Windows for 30 consecutive
+  days before the v1.0 tag.
+- Releases originate only from protected `main` and signed annotated tags; all
+  native archives have verified checksums, GitHub-hosted provenance, and a
+  CycloneDX SBOM attestation.
+- The release and execution-incident runbooks are exercised by two maintainers,
+  or governance records the single-maintainer continuity risk and a tested
+  recovery procedure.
+- Security reports are acknowledged within 3 business days and receive an
+  initial assessment within 7.
+
+### Adoption evidence
+
+- At least three independent external workflows are recorded in
+  [ADOPTERS.md](ADOPTERS.md) with the decision a receipt improved.
+- At least two adopters report repeat use separated by 30 days.
+- At least one public CI or agent workflow verifies and consumes a receipt
+  rather than only printing or storing it.
+- At least one non-maintainer issue, discussion, benchmark label,
+  documentation change, test, ecosystem fixture, or code contribution is
+  resolved and credited.
+
+Maintainer-authored fixtures, automated downloads, stars, and synthetic
+accounts cannot satisfy adoption gates.
