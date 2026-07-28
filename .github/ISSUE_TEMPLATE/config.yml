@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions and workflow design
+    url: https://github.com/yhay81/taskattest/discussions
+    about: Ask for help or discuss repository verification workflows.
+  - name: Security report
+    url: https://github.com/yhay81/taskattest/security/advisories/new
+    about: Privately report vulnerabilities or sensitive conduct issues.

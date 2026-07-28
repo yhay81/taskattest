@@ -1,0 +1,33 @@
+name: Feature request
+description: Propose a scoped discovery, receipt, verification, or workflow improvement.
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: User problem
+      description: Describe the workflow and why current evidence is insufficient.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Repository evidence
+      description: Which checked-in files can support explainable discovery?
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Smallest complete scope
+      description: Include non-goals and expected structured output.
+    validations:
+      required: true
+  - type: textarea
+    id: risks
+    attributes:
+      label: False confidence and security risks
+      description: How could this select the wrong check, omit one, mutate source, or expose data?
+    validations:
+      required: true
