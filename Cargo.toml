@@ -1,6 +1,6 @@
 [package]
 name = "taskattest"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2024"
 license = "MIT"
 description = "Evidence-backed verification receipts for software changes"
