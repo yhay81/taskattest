@@ -5,6 +5,11 @@ downloads, or repository clones as proof of use.
 
 No external adopters have been recorded yet.
 
+The shortest reporting path is the public
+[adoption report form](https://github.com/yhay81/taskattest/issues/new?template=adoption_report.yml).
+Use a pull request instead when the evidence should be committed directly to
+this file.
+
 If TaskAttest is part of a reproducible workflow, open a pull request with:
 
 - a public project or organization name;
