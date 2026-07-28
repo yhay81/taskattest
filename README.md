@@ -2,7 +2,7 @@
 
 Evidence-backed verification receipts for software changes.
 
-> Status: 0.1 release candidate. The end-to-end local workflow is implemented
+> Status: 0.1 release. The end-to-end local workflow is implemented
 > and covered by unit and CLI tests on Linux, macOS, and Windows.
 
 TaskAttest discovers the checks a repository already trusts, explains why each
