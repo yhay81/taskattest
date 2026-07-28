@@ -16,6 +16,7 @@ use crate::VERSION;
 use crate::discover::selected_checks;
 use crate::error::TaskError;
 use crate::git::GitContext;
+use crate::hex::encode_lower;
 use crate::model::{
     CheckDefinition, CheckExecution, CheckOutcome, DiscoveryReport, EnvironmentPolicy, Invocation,
     LogReference, ProgressEvent, ProgressState, Receipt, ReceiptOutcome, ReceiptPayload,
@@ -425,7 +426,7 @@ fn capture_stream(
         file.sync_all()?;
         Ok(Capture {
             path,
-            digest: format!("{:x}", hasher.finalize()),
+            digest: encode_lower(hasher.finalize()),
             bytes,
             tail,
             truncated,
