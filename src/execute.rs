@@ -309,6 +309,12 @@ fn execute_check(
     let deadline = started + Duration::from_millis(max_runtime_ms);
     let mut forced_outcome = None;
     let status = loop {
+        if let Some(status) = try_wait_without_interruption(&mut child)
+            .map_err(|error| TaskError::execution(format!("wait for {}: {error}", check.id)))?
+        {
+            terminate_orphaned_process_group(process_id);
+            break Some(status);
+        }
         if cancellation.is_cancelled() {
             forced_outcome = Some(CheckOutcome::Cancelled);
             let status = terminate_process_tree(&mut child).map_err(|error| {
@@ -328,12 +334,6 @@ fn execute_check(
             let status = terminate_process_tree(&mut child).map_err(|error| {
                 TaskError::execution(format!("terminate timed-out check {}: {error}", check.id))
             })?;
-            break Some(status);
-        }
-        if let Some(status) = try_wait_without_interruption(&mut child)
-            .map_err(|error| TaskError::execution(format!("wait for {}: {error}", check.id)))?
-        {
-            terminate_orphaned_process_group(process_id);
             break Some(status);
         }
         thread::sleep(POLL_INTERVAL);
@@ -658,7 +658,11 @@ fn terminate_process_tree(
     let deadline = Instant::now() + TERMINATION_GRACE_PERIOD;
     while Instant::now() < deadline {
         if let Some(status) = try_wait_without_interruption(child)? {
-            signal_process_group(process_group, libc::SIGKILL)?;
+            // The leader is reaped, so the group may disappear or its numeric
+            // identifier may be reused before this best-effort descendant
+            // cleanup. Any descendant retaining a capture pipe is still
+            // detected when the capture threads are joined.
+            let _ = signal_process_group(process_group, libc::SIGKILL);
             return Ok(status);
         }
         thread::sleep(POLL_INTERVAL);
