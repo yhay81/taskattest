@@ -1,0 +1,49 @@
+name: Bug report
+description: Report reproducible incorrect discovery, execution, storage, or verification behavior.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: Do not post secrets or full log blobs. Use private vulnerability reporting for security issues.
+  - type: input
+    id: version
+    attributes:
+      label: TaskAttest version
+      placeholder: taskattest 0.1.0
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Operating system
+      options: [Linux, macOS, Windows, Other]
+    validations:
+      required: true
+  - type: textarea
+    id: repository
+    attributes:
+      label: Minimal repository evidence
+      description: List redacted manifests, lockfiles, workflow steps, and configuration needed to reproduce.
+    validations:
+      required: true
+  - type: textarea
+    id: command
+    attributes:
+      label: Exact command
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: observed
+    attributes:
+      label: Observed structured result
+      description: Include only a redacted bounded result, never complete logs.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true

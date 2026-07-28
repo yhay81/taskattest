@@ -44,7 +44,7 @@ them, and return a bounded receipt that can be independently verified.**
 ## Proposed command contract
 
 ```text
-taskattest schema --brief --format json
+taskattest schema --document brief --format json
 taskattest discover --changed --format json
 taskattest run --changed --format json
 taskattest run --check unit --check lint --format json
@@ -100,7 +100,7 @@ assumed.
 
 ## Initial scope
 
-Version 0.1 will:
+Version 0.1 implements:
 
 - support Git workspaces;
 - discover common JavaScript/TypeScript, Python, Rust, and Go checks;
