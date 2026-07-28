@@ -36,6 +36,12 @@ TaskAttest records:
 `verify` checks receipt semantics, the canonical digest, the derived ID, and
 every referenced local log without rerunning or accessing the network.
 
+The checked-in
+[receipt compatibility corpus](tests/fixtures/contracts/README.md) freezes the
+published v1 receipt shape and digest derivation. CI checks exact round trips,
+offline verification, byte-level fixture digests, and declared reader and
+semantic tampering cases on every supported operating system.
+
 ## Supported discovery
 
 TaskAttest 0.1 supports Git workspaces and common checks from:

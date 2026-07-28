@@ -33,6 +33,7 @@ pub enum Confidence {
 }
 
 #[derive(Clone, Debug, Deserialize, JsonSchema, Serialize)]
+#[schemars(deny_unknown_fields)]
 pub struct CommandSpec {
     pub program: String,
     pub args: Vec<String>,
@@ -40,6 +41,7 @@ pub struct CommandSpec {
 }
 
 #[derive(Clone, Debug, Deserialize, JsonSchema, Serialize)]
+#[schemars(deny_unknown_fields)]
 pub struct DiscoverySource {
     pub path: String,
     pub sha256: String,
@@ -47,6 +49,7 @@ pub struct DiscoverySource {
 }
 
 #[derive(Clone, Debug, Deserialize, JsonSchema, Serialize)]
+#[schemars(deny_unknown_fields)]
 pub struct CheckDefinition {
     pub id: String,
     pub label: String,
@@ -62,6 +65,7 @@ pub struct CheckDefinition {
 }
 
 #[derive(Clone, Debug, Deserialize, JsonSchema, Serialize)]
+#[schemars(deny_unknown_fields)]
 pub struct CheckSelection {
     pub check_id: String,
     pub selected: bool,
@@ -69,6 +73,7 @@ pub struct CheckSelection {
 }
 
 #[derive(Clone, Debug, Deserialize, Eq, JsonSchema, PartialEq, Serialize)]
+#[schemars(deny_unknown_fields)]
 pub struct SourceIdentity {
     pub git_commit: Option<String>,
     pub git_ref: Option<String>,
@@ -80,6 +85,7 @@ pub struct SourceIdentity {
 }
 
 #[derive(Clone, Debug, Deserialize, JsonSchema, Serialize)]
+#[schemars(deny_unknown_fields)]
 pub struct DiscoveryReport {
     pub schema_version: String,
     pub source: SourceIdentity,
@@ -100,6 +106,7 @@ pub enum WorkflowClassification {
 }
 
 #[derive(Clone, Debug, Deserialize, JsonSchema, Serialize)]
+#[schemars(deny_unknown_fields)]
 pub struct WorkflowObservation {
     pub id: String,
     pub source: DiscoverySource,
@@ -113,12 +120,14 @@ pub struct WorkflowObservation {
 }
 
 #[derive(Clone, Debug, Deserialize, JsonSchema, Serialize)]
+#[schemars(deny_unknown_fields)]
 pub struct ExecutionLimits {
     pub max_runtime_ms_per_check: u64,
     pub max_log_bytes_per_check: u64,
 }
 
 #[derive(Clone, Debug, Deserialize, JsonSchema, Serialize)]
+#[schemars(deny_unknown_fields)]
 pub struct Invocation {
     pub changed_only: bool,
     pub requested_checks: Vec<String>,
@@ -127,6 +136,7 @@ pub struct Invocation {
 }
 
 #[derive(Clone, Debug, Deserialize, JsonSchema, Serialize)]
+#[schemars(deny_unknown_fields)]
 pub struct LogReference {
     pub algorithm: String,
     pub digest: String,
@@ -149,6 +159,7 @@ pub enum CheckOutcome {
 }
 
 #[derive(Clone, Debug, Deserialize, JsonSchema, Serialize)]
+#[schemars(deny_unknown_fields)]
 pub struct CheckExecution {
     pub check: CheckDefinition,
     pub started_unix_ms: u64,
@@ -164,6 +175,7 @@ pub struct CheckExecution {
 }
 
 #[derive(Clone, Debug, Deserialize, JsonSchema, Serialize)]
+#[schemars(deny_unknown_fields)]
 pub struct ToolIdentity {
     pub name: String,
     pub command: Vec<String>,
@@ -173,6 +185,7 @@ pub struct ToolIdentity {
 }
 
 #[derive(Clone, Debug, Deserialize, JsonSchema, Serialize)]
+#[schemars(deny_unknown_fields)]
 pub struct EnvironmentPolicy {
     pub mode: String,
     pub forwarded_names: Vec<String>,
@@ -180,6 +193,7 @@ pub struct EnvironmentPolicy {
 }
 
 #[derive(Clone, Debug, Deserialize, JsonSchema, Serialize)]
+#[schemars(deny_unknown_fields)]
 pub struct RedactionPolicy {
     pub name: String,
     pub full_logs_redacted: bool,
@@ -196,6 +210,7 @@ pub enum ReceiptOutcome {
 }
 
 #[derive(Clone, Debug, Deserialize, JsonSchema, Serialize)]
+#[schemars(deny_unknown_fields)]
 pub struct ReceiptPayload {
     pub schema_version: String,
     pub taskattest_version: String,
@@ -219,6 +234,7 @@ pub struct ReceiptPayload {
 }
 
 #[derive(Clone, Debug, Deserialize, JsonSchema, Serialize)]
+#[schemars(deny_unknown_fields)]
 pub struct Receipt {
     pub receipt_id: String,
     pub canonical_digest: String,
@@ -227,6 +243,7 @@ pub struct Receipt {
 }
 
 #[derive(Clone, Debug, Deserialize, JsonSchema, Serialize)]
+#[schemars(deny_unknown_fields)]
 pub struct ArtifactReference {
     pub path: String,
     pub sha256: String,

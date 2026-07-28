@@ -1,0 +1,121 @@
+{
+  "schema_version": "taskattest.contract-corpus/v1",
+  "license": "MIT",
+  "accepted": [
+    {
+      "document": "receipt",
+      "path": "receipt.incomplete.json",
+      "schema_version": "taskattest.receipt.v1",
+      "sha256": "f9c5f21b2b2c2fc68ed81f9b213ad69415ecb900a73e21347fc6f471379d191d"
+    }
+  ],
+  "rejections": [
+    {
+      "id": "unknown_top_level_field",
+      "stage": "reader",
+      "base": "receipt.incomplete.json",
+      "operation": "add",
+      "pointer": "/unexpected",
+      "value": true,
+      "expected_error_code": "receipt_invalid",
+      "reason": "unknown receipt fields must not disappear during verification"
+    },
+    {
+      "id": "unknown_nested_field",
+      "stage": "reader",
+      "base": "receipt.incomplete.json",
+      "operation": "add",
+      "pointer": "/environment/unexpected",
+      "value": true,
+      "expected_error_code": "receipt_invalid",
+      "reason": "unknown nested policy fields must fail closed"
+    },
+    {
+      "id": "omitted_nullable_source_field",
+      "stage": "reader",
+      "base": "receipt.incomplete.json",
+      "operation": "remove",
+      "pointer": "/source/git_commit",
+      "value": null,
+      "expected_error_code": "receipt_invalid",
+      "reason": "the emitted v1 shape remains explicit even for null values"
+    },
+    {
+      "id": "canonical_digest_tampered",
+      "stage": "verifier",
+      "base": "receipt.incomplete.json",
+      "operation": "replace",
+      "pointer": "/canonical_digest",
+      "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "rebind_identity": false,
+      "expected_problem": "canonical receipt digest does not match the payload",
+      "reason": "the stored full digest must bind the exact payload"
+    },
+    {
+      "id": "receipt_id_tampered",
+      "stage": "verifier",
+      "base": "receipt.incomplete.json",
+      "operation": "replace",
+      "pointer": "/receipt_id",
+      "value": "rcpt_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "rebind_identity": false,
+      "expected_problem": "receipt id is not derived from the canonical payload digest",
+      "reason": "the compact receipt ID must derive from the payload digest"
+    },
+    {
+      "id": "unsupported_schema_rebound",
+      "stage": "verifier",
+      "base": "receipt.incomplete.json",
+      "operation": "replace",
+      "pointer": "/schema_version",
+      "value": "taskattest.receipt.v99",
+      "rebind_identity": true,
+      "expected_problem": "unsupported receipt schema",
+      "reason": "a self-consistent digest cannot authorize an unsupported schema"
+    },
+    {
+      "id": "discovery_source_rebound",
+      "stage": "verifier",
+      "base": "receipt.incomplete.json",
+      "operation": "replace",
+      "pointer": "/discovery/source/status_sha256",
+      "value": "2222222222222222222222222222222222222222222222222222222222222222",
+      "rebind_identity": true,
+      "expected_problem": "receipt source and discovery source differ",
+      "reason": "discovery evidence must remain bound to the receipt source"
+    },
+    {
+      "id": "source_unchanged_rebound",
+      "stage": "verifier",
+      "base": "receipt.incomplete.json",
+      "operation": "replace",
+      "pointer": "/source_unchanged",
+      "value": false,
+      "rebind_identity": true,
+      "expected_problem": "source_unchanged is inconsistent with the source identities",
+      "reason": "a recomputed digest cannot override source identity semantics"
+    },
+    {
+      "id": "completion_before_start_rebound",
+      "stage": "verifier",
+      "base": "receipt.incomplete.json",
+      "operation": "replace",
+      "pointer": "/completed_unix_ms",
+      "value": 0,
+      "rebind_identity": true,
+      "expected_problem": "receipt completion precedes its start",
+      "reason": "a recomputed digest cannot make impossible timing valid"
+    },
+    {
+      "id": "outcome_rebound",
+      "stage": "verifier",
+      "base": "receipt.incomplete.json",
+      "operation": "replace",
+      "pointer": "/outcome",
+      "value": "passed",
+      "rebind_identity": true,
+      "expected_problem": "receipt outcome is inconsistent with check results and coverage",
+      "reason": "a recomputed digest cannot upgrade an incomplete run to passed"
+    }
+  ]
+}

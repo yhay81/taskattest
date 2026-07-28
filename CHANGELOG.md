@@ -6,6 +6,11 @@ semantic versioning.
 
 ## [Unreleased]
 
+### Added
+
+- Added a digest-pinned v1 receipt compatibility corpus with exact round-trip
+  checks and ten strict-reader or offline-semantic mutation cases.
+
 ### Fixed
 
 - Avoided reporting a successful or timed-out Unix check as an execution error
@@ -15,6 +20,8 @@ semantic versioning.
 
 - Upgraded `sha2` to 0.11 and centralized lowercase hexadecimal encoding while
   preserving workspace, log, and receipt digest contracts.
+- Receipt loading now rejects unknown or omitted fields before they can
+  disappear during deserialization and evade canonical verification.
 - Defined measurable v1.0 compatibility, discovery accuracy, lifecycle
   correctness, security, performance, delivery, maintenance, contribution, and
   repeat-adoption gates.

@@ -26,6 +26,20 @@ jobs:
         run: cargo clippy --all-targets --locked -- -D warnings
       - name: Package manifest
         run: cargo package --locked --allow-dirty
+      - name: Contract fixtures
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          fixtures = sorted(Path("tests/fixtures/contracts").rglob("*.json"))
+          if not fixtures:
+              raise SystemExit("no contract fixtures found")
+          for fixture in fixtures:
+              with fixture.open(encoding="utf-8") as handle:
+                  json.load(handle)
+          print(f"validated {len(fixtures)} contract fixtures")
+          PY
       - name: TaskAttest receipt dogfood
         run: cargo run --quiet --locked -- run --check rust-format --check rust-lint --check rust-test --check rust-build --receipt-out "${RUNNER_TEMP}/taskattest-ci-receipt.json" --format json
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1

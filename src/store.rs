@@ -113,7 +113,16 @@ impl StateStore {
         file.take(MAX_RECEIPT_BYTES + 1)
             .read_to_end(&mut bytes)
             .map_err(|error| TaskError::io("read receipt", path, error))?;
-        serde_json::from_slice(&bytes).map_err(TaskError::from)
+        let document: serde_json::Value =
+            serde_json::from_slice(&bytes).map_err(TaskError::from)?;
+        let receipt: Receipt = serde_json::from_value(document.clone()).map_err(TaskError::from)?;
+        let normalized = serde_json::to_value(&receipt)?;
+        if document != normalized {
+            return Err(TaskError::receipt(
+                "receipt contains unknown or omitted fields",
+            ));
+        }
+        Ok(receipt)
     }
 
     pub fn create_capture_file(&self, stream: &str) -> Result<(PathBuf, File), TaskError> {
