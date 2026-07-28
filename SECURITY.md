@@ -57,4 +57,6 @@ Pull requests are checked with GitHub Dependency Review and fail when they
 introduce a dependency with a known moderate-or-higher-severity vulnerability.
 A weekly OpenSSF Scorecard analysis publishes authenticated results and uploads
 SARIF findings to GitHub code scanning. CodeQL default setup analyzes Rust and
-workflow sources with extended security queries.
+workflow sources with extended security queries. ClusterFuzzLite runs the
+production strict receipt parser on every code-changing pull request and in a
+longer weekly AddressSanitizer batch; see [FUZZING.md](FUZZING.md).

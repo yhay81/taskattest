@@ -17,6 +17,9 @@ semantic versioning.
   with every action pinned to an immutable commit SHA.
 - Enabled CodeQL default setup and restricted release and dependency-audit
   credentials to the minimum permissions required by each job.
+- Added production-path receipt fuzzing with reproducible local `cargo-fuzz`
+  execution, five-minute pull-request checks, and weekly ClusterFuzzLite
+  AddressSanitizer batches.
 
 ## [0.2.0] - 2026-07-29
 

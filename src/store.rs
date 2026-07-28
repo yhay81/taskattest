@@ -11,6 +11,28 @@ use crate::source::{sha256_path, write_json_atomic};
 const MAX_RECEIPT_BYTES: u64 = 4 * 1024 * 1024;
 static TEMPORARY_SEQUENCE: AtomicU64 = AtomicU64::new(0);
 
+/// Parses one bounded receipt and rejects fields that the current contract
+/// would silently omit during deserialization.
+///
+/// # Errors
+///
+/// Returns a receipt error when the document is oversized, malformed, or not a
+/// lossless representation of the current receipt schema.
+pub fn parse_receipt_document(bytes: &[u8]) -> Result<Receipt, TaskError> {
+    if u64::try_from(bytes.len()).unwrap_or(u64::MAX) > MAX_RECEIPT_BYTES {
+        return Err(TaskError::receipt("receipt exceeds the 4 MiB safety bound"));
+    }
+    let document: serde_json::Value = serde_json::from_slice(bytes).map_err(TaskError::from)?;
+    let receipt: Receipt = serde_json::from_value(document.clone()).map_err(TaskError::from)?;
+    let normalized = serde_json::to_value(&receipt)?;
+    if document != normalized {
+        return Err(TaskError::receipt(
+            "receipt contains unknown or omitted fields",
+        ));
+    }
+    Ok(receipt)
+}
+
 #[derive(Clone, Debug)]
 pub struct StateStore {
     root: PathBuf,
@@ -113,16 +135,7 @@ impl StateStore {
         file.take(MAX_RECEIPT_BYTES + 1)
             .read_to_end(&mut bytes)
             .map_err(|error| TaskError::io("read receipt", path, error))?;
-        let document: serde_json::Value =
-            serde_json::from_slice(&bytes).map_err(TaskError::from)?;
-        let receipt: Receipt = serde_json::from_value(document.clone()).map_err(TaskError::from)?;
-        let normalized = serde_json::to_value(&receipt)?;
-        if document != normalized {
-            return Err(TaskError::receipt(
-                "receipt contains unknown or omitted fields",
-            ));
-        }
-        Ok(receipt)
+        parse_receipt_document(&bytes)
     }
 
     pub fn create_capture_file(&self, stream: &str) -> Result<(PathBuf, File), TaskError> {
