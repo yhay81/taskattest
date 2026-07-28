@@ -41,7 +41,7 @@ jobs:
           print(f"validated {len(fixtures)} contract fixtures")
           PY
       - name: TaskAttest receipt dogfood
-        run: cargo run --quiet --locked -- run --check rust-format --check rust-lint --check rust-test --check rust-build --receipt-out "${RUNNER_TEMP}/taskattest-ci-receipt.json" --format json
+        run: cargo run --quiet --locked -- run --check contract-fixtures --check rust-format --check rust-lint --check rust-test --check rust-build --receipt-out "${RUNNER_TEMP}/taskattest-ci-receipt.json" --format json
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: taskattest-ci-receipt
