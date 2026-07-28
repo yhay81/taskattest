@@ -21,6 +21,8 @@ binding, no-clobber evidence storage, and independent verification.
 ## 0.2 discovery quality
 
 - Benchmark corpus with labeled expected checks across all four ecosystems.
+- [x] Deterministic 10,000-file, 100-check performance fixture with weekly raw
+  discovery, verification, output-size, and peak-memory artifacts.
 - Monorepo/workspace package graphs and changed-path dependency propagation.
 - More task runners and CI providers without arbitrary configuration
   evaluation.
