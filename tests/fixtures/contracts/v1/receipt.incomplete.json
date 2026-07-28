@@ -1,0 +1,71 @@
+{
+  "receipt_id": "rcpt_390123ce957703a847fd0d557c29ba05",
+  "canonical_digest": "390123ce957703a847fd0d557c29ba0593971b92c12732bb3c282dbe6cfcf8ba",
+  "schema_version": "taskattest.receipt.v1",
+  "taskattest_version": "0.1.0",
+  "source": {
+    "git_commit": null,
+    "git_ref": null,
+    "dirty": false,
+    "status_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "workspace_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+    "workspace_file_count": 0,
+    "changed_paths": []
+  },
+  "source_after": {
+    "git_commit": null,
+    "git_ref": null,
+    "dirty": false,
+    "status_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "workspace_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+    "workspace_file_count": 0,
+    "changed_paths": []
+  },
+  "source_unchanged": true,
+  "invocation": {
+    "changed_only": false,
+    "requested_checks": [],
+    "fail_fast": false,
+    "limits": {
+      "max_runtime_ms_per_check": 1,
+      "max_log_bytes_per_check": 1
+    }
+  },
+  "discovery": {
+    "schema_version": "taskattest.discovery.v1",
+    "source": {
+      "git_commit": null,
+      "git_ref": null,
+      "dirty": false,
+      "status_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "workspace_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "workspace_file_count": 0,
+      "changed_paths": []
+    },
+    "checks": [],
+    "selection": [],
+    "coverage_gaps": [],
+    "configuration_files": [],
+    "workflow_observations": []
+  },
+  "started_unix_ms": 1,
+  "completed_unix_ms": 2,
+  "duration_ms": 1,
+  "outcome": "incomplete",
+  "checks": [],
+  "coverage_gaps": [],
+  "toolchains": [],
+  "environment": {
+    "mode": "allowlist",
+    "forwarded_names": [],
+    "values_recorded": false
+  },
+  "redaction": {
+    "name": "test",
+    "full_logs_redacted": false,
+    "diagnostic_summaries_redacted": true
+  },
+  "non_hermetic_inputs": [],
+  "artifacts": [],
+  "annotations": {}
+}

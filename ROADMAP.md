@@ -55,6 +55,13 @@ do not substitute for accurate discovery, bounded execution, or real use.
 - Environment equivalence, non-hermetic inputs, source identity, and discovery
   gaps remain explicit rather than being promoted to stronger attestation.
 
+Current evidence: the checked-in v1 receipt corpus freezes byte-level
+serialization, canonical digest and receipt-ID derivation, and offline semantic
+verification. Ten declared mutations cover strict reader shape, identity,
+schema, source, timing, and outcome failures, including self-consistent
+attacker-recomputed digests. A second released minor version and its migration
+or no-migration evidence are still required.
+
 ### Discovery accuracy, correctness, and security
 
 - A published labeled corpus contains at least 100 representative projects,

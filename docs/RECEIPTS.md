@@ -51,10 +51,12 @@ The default state directory is `<git-dir>/taskattest`. Receipts are stored as
 
 `taskattest verify`:
 
-1. checks the receipt schema version;
-2. recomputes the canonical payload digest and derived ID;
-3. validates source, selection, timing, log-reference, and outcome invariants;
-4. hashes every referenced local log and compares its length and digest.
+1. requires the exact published receipt shape, rejecting unknown or omitted
+   fields before they can disappear during deserialization;
+2. checks the receipt schema version;
+3. recomputes the canonical payload digest and derived ID;
+4. validates source, selection, timing, log-reference, and outcome invariants;
+5. hashes every referenced local log and compares its length and digest.
 
 It does not rerun checks, contact a server, validate the current workspace, or
 prove the author of a receipt. A failed-check or incomplete receipt can still
@@ -71,6 +73,10 @@ be internally valid: integrity and success are separate properties.
 - `cancelled`: cancellation was observed.
 
 Consumers must inspect both receipt integrity and outcome.
+
+The versioned fixtures and self-consistent adversarial mutations in
+[`tests/fixtures/contracts/`](../tests/fixtures/contracts/README.md) exercise
+these guarantees without executing checks or contacting a network.
 
 ## Portability and retention
 

@@ -94,6 +94,29 @@ pub enum SchemaDocument {
 mod tests {
     use super::*;
 
+    fn assert_declared_objects_are_closed(value: &Value, path: &str) {
+        match value {
+            Value::Object(object) => {
+                if object.contains_key("properties") {
+                    assert!(
+                        object.get("additionalProperties") == Some(&Value::Bool(false))
+                            || object.get("unevaluatedProperties") == Some(&Value::Bool(false)),
+                        "object schema at {path} must reject unknown fields"
+                    );
+                }
+                for (key, child) in object {
+                    assert_declared_objects_are_closed(child, &format!("{path}/{key}"));
+                }
+            }
+            Value::Array(values) => {
+                for (index, child) in values.iter().enumerate() {
+                    assert_declared_objects_are_closed(child, &format!("{path}/{index}"));
+                }
+            }
+            _ => {}
+        }
+    }
+
     #[test]
     fn every_document_schema_serializes() {
         for document in [
@@ -107,5 +130,15 @@ mod tests {
             let schema = document_schema(document);
             assert!(schema.is_object());
         }
+    }
+
+    #[test]
+    fn receipt_schema_rejects_unknown_fields_but_keeps_annotations_extensible() {
+        let schema = document_schema(SchemaDocument::Receipt);
+        assert_declared_objects_are_closed(&schema, "#");
+        assert_eq!(
+            schema.pointer("/properties/annotations/additionalProperties/type"),
+            Some(&Value::String("string".to_owned()))
+        );
     }
 }

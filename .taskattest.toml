@@ -1,0 +1,24 @@
+version = 1
+
+[[checks]]
+id = "contract-fixtures"
+label = "Contract fixture JSON"
+kind = "test"
+command = [
+  "python3",
+  "-c",
+  "import json; from pathlib import Path; fixtures = sorted(Path('tests/fixtures/contracts').rglob('*.json')); assert fixtures, 'no contract fixtures found'; [json.loads(path.read_text(encoding='utf-8')) for path in fixtures]; print(f'validated {len(fixtures)} contract fixtures')",
+]
+working_directory = "."
+reason = "versioned receipt fixtures and mutation manifests are public compatibility evidence"
+coverage_paths = [
+  "tests/fixtures/contracts/**",
+  "tests/contract_compatibility.rs",
+  ".taskattest.toml",
+  ".github/workflows/**",
+]
+pass_environment = []
+non_hermetic_inputs = ["installed Python interpreter"]
+replaces_workflow_steps = [
+  ".github/workflows/ci.yml#quality#Contract fixtures",
+]
