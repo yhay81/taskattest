@@ -8,6 +8,7 @@ use sha2::{Digest, Sha256};
 
 use crate::error::TaskError;
 use crate::git::GitContext;
+use crate::hex::encode_lower;
 use crate::model::SourceIdentity;
 
 const HASH_BUFFER_BYTES: usize = 64 * 1024;
@@ -48,13 +49,13 @@ pub fn sha256_path(path: &Path) -> Result<String, TaskError> {
         }
         hasher.update(&buffer[..count]);
     }
-    Ok(format!("{:x}", hasher.finalize()))
+    Ok(encode_lower(hasher.finalize()))
 }
 
 pub fn sha256_bytes(bytes: &[u8]) -> String {
     let mut hasher = Sha256::new();
     hasher.update(bytes);
-    format!("{:x}", hasher.finalize())
+    encode_lower(hasher.finalize())
 }
 
 fn hash_workspace(git: &GitContext, paths: &[String]) -> Result<String, TaskError> {
@@ -90,7 +91,7 @@ fn hash_workspace(git: &GitContext, paths: &[String]) -> Result<String, TaskErro
             )));
         }
     }
-    Ok(format!("{:x}", hasher.finalize()))
+    Ok(encode_lower(hasher.finalize()))
 }
 
 fn hash_file_into(path: &Path, hasher: &mut Sha256) -> Result<(), TaskError> {

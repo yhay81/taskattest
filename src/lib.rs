@@ -2,6 +2,7 @@ pub mod discover;
 pub mod error;
 pub mod execute;
 pub mod git;
+mod hex;
 pub mod model;
 pub mod schema;
 pub mod source;
