@@ -6,6 +6,8 @@ semantic versioning.
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-07-28
+
 ### Added
 
 - Git workspace identity before and after verification, including dirty files,
@@ -20,4 +22,5 @@ semantic versioning.
 - Explicit argv-only replacements for otherwise unmodeled CI verification
   steps.
 
-[Unreleased]: https://github.com/yhay81/taskattest/commits/main
+[Unreleased]: https://github.com/yhay81/taskattest/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/yhay81/taskattest/releases/tag/v0.1.0

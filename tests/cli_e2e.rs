@@ -179,7 +179,12 @@ fn failed_check_still_produces_an_internally_valid_receipt() {
         directory.path(),
         &["run", "--check", "portable-check", "--format", "json"],
     );
-    assert_eq!(run.status.code(), Some(1));
+    assert_eq!(
+        run.status.code(),
+        Some(1),
+        "unexpected taskattest stderr: {}",
+        String::from_utf8_lossy(&run.stderr)
+    );
     let receipt: Value = serde_json::from_slice(&run.stdout).expect("parse receipt");
     assert_eq!(receipt["outcome"], "failed");
     assert_eq!(receipt["checks"][0]["outcome"], "failed");
@@ -215,7 +220,12 @@ fn timeout_terminates_the_process_group_and_records_evidence() {
             "json",
         ],
     );
-    assert_eq!(run.status.code(), Some(1));
+    assert_eq!(
+        run.status.code(),
+        Some(1),
+        "unexpected taskattest stderr: {}",
+        String::from_utf8_lossy(&run.stderr)
+    );
     assert!(started.elapsed() < Duration::from_secs(5));
     let receipt: Value = serde_json::from_slice(&run.stdout).expect("parse receipt");
     assert_eq!(receipt["checks"][0]["outcome"], "timed_out");
