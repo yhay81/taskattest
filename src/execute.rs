@@ -310,27 +310,26 @@ fn execute_check(
     let status = loop {
         if cancellation.is_cancelled() {
             forced_outcome = Some(CheckOutcome::Cancelled);
-            terminate_process_tree(&mut child).map_err(|error| {
+            let status = terminate_process_tree(&mut child).map_err(|error| {
                 TaskError::execution(format!("terminate cancelled check {}: {error}", check.id))
             })?;
-            break child.try_wait().ok().flatten();
+            break Some(status);
         }
         if log_limit_exceeded.load(Ordering::SeqCst) {
             forced_outcome = Some(CheckOutcome::LogLimitExceeded);
-            terminate_process_tree(&mut child).map_err(|error| {
+            let status = terminate_process_tree(&mut child).map_err(|error| {
                 TaskError::execution(format!("terminate log-limited check {}: {error}", check.id))
             })?;
-            break child.try_wait().ok().flatten();
+            break Some(status);
         }
         if Instant::now() >= deadline {
             forced_outcome = Some(CheckOutcome::TimedOut);
-            terminate_process_tree(&mut child).map_err(|error| {
+            let status = terminate_process_tree(&mut child).map_err(|error| {
                 TaskError::execution(format!("terminate timed-out check {}: {error}", check.id))
             })?;
-            break child.try_wait().ok().flatten();
+            break Some(status);
         }
-        if let Some(status) = child
-            .try_wait()
+        if let Some(status) = try_wait_without_interruption(&mut child)
             .map_err(|error| TaskError::execution(format!("wait for {}: {error}", check.id)))?
         {
             terminate_orphaned_process_group(process_id);
@@ -650,19 +649,21 @@ fn configure_process_group(command: &mut Command) {
 fn configure_process_group(_command: &mut Command) {}
 
 #[cfg(unix)]
-fn terminate_process_tree(child: &mut std::process::Child) -> std::io::Result<()> {
+fn terminate_process_tree(
+    child: &mut std::process::Child,
+) -> std::io::Result<std::process::ExitStatus> {
     let process_group = -(i32::try_from(child.id()).unwrap_or(i32::MAX));
     signal_process_group(process_group, libc::SIGTERM)?;
     let deadline = Instant::now() + TERMINATION_GRACE_PERIOD;
     while Instant::now() < deadline {
-        if child.try_wait()?.is_some() {
+        if let Some(status) = try_wait_without_interruption(child)? {
             signal_process_group(process_group, libc::SIGKILL)?;
-            return Ok(());
+            return Ok(status);
         }
         thread::sleep(POLL_INTERVAL);
     }
     signal_process_group(process_group, libc::SIGKILL)?;
-    child.wait().map(|_| ())
+    wait_without_interruption(child)
 }
 
 #[cfg(unix)]
@@ -697,27 +698,53 @@ fn process_group_exists(process_group: i32) -> bool {
 }
 
 #[cfg(windows)]
-fn terminate_process_tree(child: &mut std::process::Child) -> std::io::Result<()> {
+fn terminate_process_tree(
+    child: &mut std::process::Child,
+) -> std::io::Result<std::process::ExitStatus> {
     let result = Command::new("taskkill")
         .args(["/PID", &child.id().to_string(), "/T", "/F"])
         .status()?;
-    if !result.success() && child.try_wait()?.is_none() {
+    if !result.success() && try_wait_without_interruption(child)?.is_none() {
         child.kill()?;
     }
-    child.wait().map(|_| ())
+    wait_without_interruption(child)
 }
 
 #[cfg(windows)]
 fn terminate_orphaned_process_group(_process_id: u32) {}
 
 #[cfg(not(any(unix, windows)))]
-fn terminate_process_tree(child: &mut std::process::Child) -> std::io::Result<()> {
+fn terminate_process_tree(
+    child: &mut std::process::Child,
+) -> std::io::Result<std::process::ExitStatus> {
     child.kill()?;
-    child.wait().map(|_| ())
+    wait_without_interruption(child)
 }
 
 #[cfg(not(any(unix, windows)))]
 fn terminate_orphaned_process_group(_process_id: u32) {}
+
+fn try_wait_without_interruption(
+    child: &mut std::process::Child,
+) -> std::io::Result<Option<std::process::ExitStatus>> {
+    loop {
+        match child.try_wait() {
+            Err(error) if error.kind() == std::io::ErrorKind::Interrupted => continue,
+            result => return result,
+        }
+    }
+}
+
+fn wait_without_interruption(
+    child: &mut std::process::Child,
+) -> std::io::Result<std::process::ExitStatus> {
+    loop {
+        match child.wait() {
+            Err(error) if error.kind() == std::io::ErrorKind::Interrupted => continue,
+            result => return result,
+        }
+    }
+}
 
 fn elapsed_ms(duration: Duration) -> u64 {
     u64::try_from(duration.as_millis()).unwrap_or(u64::MAX)
