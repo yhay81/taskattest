@@ -6,6 +6,11 @@ semantic versioning.
 
 ## [Unreleased]
 
+### Fixed
+
+- Avoided reporting a successful or timed-out Unix check as an execution error
+  when its process group disappears during post-exit descendant cleanup.
+
 ### Changed
 
 - Upgraded `sha2` to 0.11 and centralized lowercase hexadecimal encoding while
