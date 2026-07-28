@@ -15,6 +15,9 @@ semantic versioning.
 
 - Upgraded `sha2` to 0.11 and centralized lowercase hexadecimal encoding while
   preserving workspace, log, and receipt digest contracts.
+- Defined measurable v1.0 compatibility, discovery accuracy, lifecycle
+  correctness, security, performance, delivery, maintenance, contribution, and
+  repeat-adoption gates.
 
 ## [0.1.0] - 2026-07-28
 
