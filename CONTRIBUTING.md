@@ -24,6 +24,9 @@ cargo test --all-targets --locked
 Some tests use portable Git repositories. Unix-only process-group tests skip on
 Windows.
 
+Receipt parsing is continuously fuzzed. See [FUZZING.md](FUZZING.md) for the
+reproducible local command and crash-handling rules.
+
 ## Making a change
 
 1. Open an issue first for a receipt/schema change, new ecosystem, discovery
