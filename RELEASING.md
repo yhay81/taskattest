@@ -25,8 +25,8 @@ Only a release manager named in [GOVERNANCE.md](GOVERNANCE.md) may release.
 6. Create and push a signed annotated tag:
 
    ```bash
-   git tag -s v0.1.0 -m "TaskAttest 0.1.0"
-   git push origin v0.1.0
+   git tag -s v0.2.0 -m "TaskAttest 0.2.0"
+   git push origin v0.2.0
    ```
 
 7. The release workflow creates native archives, completions, a CycloneDX SBOM,
@@ -36,9 +36,9 @@ Only a release manager named in [GOVERNANCE.md](GOVERNANCE.md) may release.
 
    ```bash
    sha256sum --check SHA256SUMS
-   gh attestation verify taskattest-v0.1.0-linux-x86_64.tar.gz \
+   gh attestation verify taskattest-v0.2.0-linux-x86_64.tar.gz \
      --repo yhay81/taskattest
-   gh attestation verify taskattest-v0.1.0-linux-x86_64.tar.gz \
+   gh attestation verify taskattest-v0.2.0-linux-x86_64.tar.gz \
      --repo yhay81/taskattest \
      --predicate-type https://cyclonedx.org/bom
    ```

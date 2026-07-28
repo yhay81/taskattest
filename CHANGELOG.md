@@ -6,6 +6,14 @@ semantic versioning.
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-07-29
+
+### Compatibility
+
+- Preserved the public v0.1 CLI, discovery, receipt, and verification
+  contracts. The v0.2 verifier accepts the digest-pinned v0.1 receipt corpus
+  byte-for-byte; no migration is required.
+
 ### Added
 
 - Added a digest-pinned v1 receipt compatibility corpus with exact round-trip
@@ -44,5 +52,6 @@ semantic versioning.
 - Explicit argv-only replacements for otherwise unmodeled CI verification
   steps.
 
-[Unreleased]: https://github.com/yhay81/taskattest/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/yhay81/taskattest/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/yhay81/taskattest/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/yhay81/taskattest/releases/tag/v0.1.0
