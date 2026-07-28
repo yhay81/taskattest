@@ -1,0 +1,82 @@
+name: Adoption report
+description: Share a sanitized TaskAttest evaluation or repeat-use report
+title: "[Adoption]: "
+labels:
+  - adoption
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping TaskAttest measure real-world usefulness before v1.0.
+        This issue is public. Do not include credentials, private source,
+        proprietary logs, environment values, or unreviewed receipts.
+  - type: input
+    id: version
+    attributes:
+      label: TaskAttest version
+      description: Prefer the exact output of `taskattest --version`.
+      placeholder: taskattest 0.2.0
+    validations:
+      required: true
+  - type: input
+    id: platform
+    attributes:
+      label: Platform
+      description: Operating system, architecture, and relevant toolchain.
+      placeholder: Ubuntu 24.04 x86_64; Rust workspace
+    validations:
+      required: true
+  - type: textarea
+    id: workflow
+    attributes:
+      label: Sanitized workflow
+      description: What checks or change-verification job used TaskAttest, and in local, CI, or agent automation?
+    validations:
+      required: true
+  - type: dropdown
+    id: repeat_use
+    attributes:
+      label: Usage duration
+      options:
+        - Evaluation only
+        - Repeated use for less than 30 days
+        - Repeated use for at least 30 days
+    validations:
+      required: true
+  - type: textarea
+    id: decision
+    attributes:
+      label: Decision improved
+      description: What merge, release, audit, or escalation decision did the evidence improve?
+    validations:
+      required: true
+  - type: textarea
+    id: limitations
+    attributes:
+      label: Limitations or failures
+      description: Include missed checks, misleading evidence, false positives, or missing capability. Write "None observed" if applicable.
+    validations:
+      required: true
+  - type: input
+    id: evidence
+    attributes:
+      label: Public evidence
+      description: Optional link to a public integration, workflow, or sanitized result.
+  - type: dropdown
+    id: listing_permission
+    attributes:
+      label: Listing permission
+      description: May maintainers summarize this report in ADOPTERS.md or release notes?
+      options:
+        - Yes, with the public name given here
+        - Yes, only as anonymized or aggregate evidence
+        - No, feedback only
+    validations:
+      required: true
+  - type: checkboxes
+    id: public_safety
+    attributes:
+      label: Public-data confirmation
+      options:
+        - label: I reviewed this report and removed secrets, confidential data, private source, and unsafe artifacts.
+          required: true
