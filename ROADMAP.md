@@ -15,8 +15,8 @@ binding, no-clobber evidence storage, and independent verification.
 - [x] Offline integrity and semantic verification.
 - [x] Human, JSON, NDJSON, brief schema, full JSON Schema, and completions.
 - [x] Unit and CLI failure-path coverage.
-- [ ] Linux, macOS, Windows, MSRV, audit, and package CI green on `main`.
-- [ ] Signed `v0.1.0` tag and independently verified release archives.
+- [x] Linux, macOS, Windows, MSRV, audit, and package CI green on `main`.
+- [x] Signed `v0.1.0` tag and independently verified release archives.
 
 ## 0.2 discovery quality
 
