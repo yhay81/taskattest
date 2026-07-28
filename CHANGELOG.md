@@ -10,6 +10,8 @@ semantic versioning.
 
 - Added a digest-pinned v1 receipt compatibility corpus with exact round-trip
   checks and ten strict-reader or offline-semantic mutation cases.
+- Added a deterministic 10,000-file, 100-check benchmark workspace with weekly
+  raw discovery, offline-verification, output-size, and peak-memory artifacts.
 
 ### Fixed
 

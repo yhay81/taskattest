@@ -42,6 +42,12 @@ published v1 receipt shape and digest derivation. CI checks exact round trips,
 offline verification, byte-level fixture digests, and declared reader and
 semantic tampering cases on every supported operating system.
 
+Performance observations use a generated 10,000-file, 100-check Git workspace
+and a complete 100-check receipt. The
+[benchmark methodology](benchmarks/README.md) documents fixture construction,
+measurement boundaries, raw artifacts, and the distinction between the current
+baseline and future v1.0 regression thresholds.
+
 ## Supported discovery
 
 TaskAttest 0.1 supports Git workspaces and common checks from:
