@@ -57,12 +57,13 @@ do not substitute for accurate discovery, bounded execution, or real use.
 - Environment equivalence, non-hermetic inputs, source identity, and discovery
   gaps remain explicit rather than being promoted to stronger attestation.
 
-Current evidence: the checked-in v1 receipt corpus freezes byte-level
-serialization, canonical digest and receipt-ID derivation, and offline semantic
-verification. Ten declared mutations cover strict reader shape, identity,
-schema, source, timing, and outcome failures, including self-consistent
-attacker-recomputed digests. A second released minor version and its migration
-or no-migration evidence are still required.
+Current evidence: v0.2 and v0.3 provide two released compatibility cycles. The
+current v0.3 verifier accepts the digest-pinned v1 receipt corpus byte-for-byte
+and preserves canonical digest, receipt-ID, and offline semantic verification.
+Ten declared mutations cover strict reader shape, identity, schema, source,
+timing, and outcome failures, including self-consistent attacker-recomputed
+digests. The v0.2 and v0.3 release notes record contract preservation; no
+migration is required.
 
 ### Discovery accuracy, correctness, and security
 
