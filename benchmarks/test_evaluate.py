@@ -97,6 +97,20 @@ class EvaluateTests(unittest.TestCase):
             with self.assertRaises(evaluate_module.EvaluationError):
                 evaluate_module.evaluate(config, samples)
 
+    def test_versioned_baseline_enforces_noise_aware_limit(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            directory = Path(temporary)
+            config, baseline_samples = self.write_case(directory, [0.2] * 20)
+            baseline = evaluate_module.evaluate(config, baseline_samples)
+            baseline_path = directory / "baseline.json"
+            baseline_path.write_text(json.dumps(baseline), encoding="utf-8")
+            _, current_samples = self.write_case(directory, [0.31] * 20)
+            result = evaluate_module.evaluate(config, current_samples, baseline_path)
+            self.assertFalse(result["passed"])
+            self.assertAlmostEqual(
+                result["metrics"][0]["effective_maximum"], 0.3
+            )
+
 
 if __name__ == "__main__":
     unittest.main()

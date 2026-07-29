@@ -130,8 +130,10 @@ def baseline_metrics(path: Path | None) -> tuple[dict[str, float], dict[str, Any
         )
     return values, {
         "path": str(path),
+        "benchmark_schema_version": baseline.get("benchmark_schema_version"),
         "generated_at": baseline.get("generated_at"),
         "git_sha": baseline.get("git_sha"),
+        "runner": baseline.get("runner"),
         "sample_count": baseline.get("sample_count"),
         "config_sha256": baseline.get("config_sha256"),
     }
@@ -168,7 +170,23 @@ def evaluate(
                 f"found {runner[field]!r}"
             )
 
+    config_sha256 = hashlib.sha256(config_bytes).hexdigest()
     prior_values, baseline = baseline_metrics(baseline_path)
+    if baseline is not None:
+        if baseline["benchmark_schema_version"] != expected_schema:
+            raise EvaluationError("baseline benchmark schema does not match config")
+        if baseline["sample_count"] != expected_count:
+            raise EvaluationError("baseline sample count does not match config")
+        if baseline["config_sha256"] != config_sha256:
+            raise EvaluationError("baseline threshold config digest does not match")
+        baseline_runner = baseline["runner"]
+        if not isinstance(baseline_runner, dict):
+            raise EvaluationError("baseline runner identity is missing")
+        for field in ("os", "arch", "image"):
+            if baseline_runner.get(field) != runner[field]:
+                raise EvaluationError(
+                    f"baseline runner {field} does not match current samples"
+                )
     metric_configs = config.get("metrics")
     if not isinstance(metric_configs, list) or not metric_configs:
         raise EvaluationError("at least one metric is required")
@@ -240,7 +258,7 @@ def evaluate(
         "warmup_count": config.get("warmup_count"),
         "sample_count": len(samples),
         "percentile_method": "nearest_rank",
-        "config_sha256": hashlib.sha256(config_bytes).hexdigest(),
+        "config_sha256": config_sha256,
         "baseline": baseline,
         "metrics": results,
         "passed": all(metric["passed"] for metric in results),
