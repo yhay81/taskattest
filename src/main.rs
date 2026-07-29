@@ -13,7 +13,7 @@ use taskattest::model::{
     DiscoveryReport, ExecutionLimits, OutputFormat, Receipt, ReceiptOutcome, VerificationReport,
 };
 use taskattest::schema::{SchemaDocument, document_schema};
-use taskattest::source::{identify_source, write_json_atomic};
+use taskattest::source::{identify_source, preflight_json_output, write_json_atomic};
 use taskattest::store::StateStore;
 use taskattest::verify::verify_receipt;
 
@@ -150,6 +150,9 @@ fn run(cli: &Cli) -> Result<u8, TaskError> {
             max_log_bytes_per_check,
             receipt_out,
         } => {
+            if let Some(path) = receipt_out {
+                preflight_json_output(path)?;
+            }
             let git = GitContext::discover(&cli.workspace)?;
             let source = identify_source(&git)?;
             let discovery = discover_checks(&git, source, *changed, check)?;
@@ -174,13 +177,17 @@ fn run(cli: &Cli) -> Result<u8, TaskError> {
                 |event| emit_progress(event, cli.format, cli.quiet),
             )?;
             if let Some(path) = receipt_out {
-                if path.exists() {
-                    return Err(TaskError::execution(format!(
-                        "receipt output already exists: {}",
-                        path.display()
-                    )));
+                if let Err(error) = write_json_atomic(path, &receipt) {
+                    let stored_receipt = store.receipt_path(&receipt.receipt_id)?;
+                    let recovery = TaskError::post_execution_receipt_publication(
+                        &receipt.receipt_id,
+                        &stored_receipt,
+                        path,
+                        &error,
+                    );
+                    let _ = emit_receipt(&receipt, cli.format);
+                    return Err(recovery);
                 }
-                write_json_atomic(path, &receipt)?;
             }
             emit_receipt(&receipt, cli.format)?;
             Ok(match receipt.payload.outcome {
@@ -322,8 +329,10 @@ fn emit_progress(event: &taskattest::model::ProgressEvent, format: OutputFormat,
             eprintln!("{:?} {subject}", event.state);
         }
         OutputFormat::Ndjson => {
-            if let Ok(line) = serde_json::to_string(event) {
-                println!("{line}");
+            let stderr = io::stderr();
+            let mut handle = stderr.lock();
+            if serde_json::to_writer(&mut handle, event).is_ok() {
+                let _ = handle.write_all(b"\n");
             }
         }
         OutputFormat::Json => {}
@@ -348,11 +357,19 @@ fn emit_error(error: &TaskError, format: OutputFormat) {
     match format {
         OutputFormat::Human => eprintln!("{}: {}", error.code, error.message),
         OutputFormat::Json => {
-            let _ = serde_json::to_writer_pretty(io::stderr(), &ErrorDocument::from(error));
+            if let Some(recovery) = &error.recovery {
+                let _ = serde_json::to_writer_pretty(io::stderr(), recovery);
+            } else {
+                let _ = serde_json::to_writer_pretty(io::stderr(), &ErrorDocument::from(error));
+            }
             eprintln!();
         }
         OutputFormat::Ndjson => {
-            let _ = serde_json::to_writer(io::stderr(), &ErrorDocument::from(error));
+            if let Some(recovery) = &error.recovery {
+                let _ = serde_json::to_writer(io::stderr(), recovery);
+            } else {
+                let _ = serde_json::to_writer(io::stderr(), &ErrorDocument::from(error));
+            }
             eprintln!();
         }
     }

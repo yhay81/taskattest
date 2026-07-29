@@ -47,6 +47,14 @@ lines are redacted there only.
 The default state directory is `<git-dir>/taskattest`. Receipts are stored as
 `receipts/<receipt-id>.json`.
 
+An optional `--receipt-out` is an additional portable copy, not the primary
+durable record. TaskAttest validates detectable destination failures before
+checks start and never overwrites an existing path. A destination race can
+still happen after checks complete. In that case the internally stored receipt
+remains authoritative, stdout contains that receipt, stderr contains a
+`taskattest.receipt-recovery.v1` document, and the process exits with code 7.
+Follow [RECEIPT_RECOVERY.md](RECEIPT_RECOVERY.md); do not rerun the checks.
+
 ## Offline verification
 
 `taskattest verify`:

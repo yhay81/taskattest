@@ -1,11 +1,11 @@
 use schemars::JsonSchema;
 use serde_json::{Value, json};
 
-use crate::error::ErrorDocument;
+use crate::error::{ErrorDocument, ReceiptRecoveryDocument};
 use crate::model::{DiscoveryReport, ProgressEvent, Receipt, VerificationReport};
 use crate::{
     DISCOVERY_SCHEMA_VERSION, ERROR_SCHEMA_VERSION, PROGRESS_SCHEMA_VERSION,
-    RECEIPT_SCHEMA_VERSION, VERIFICATION_SCHEMA_VERSION, VERSION,
+    RECEIPT_RECOVERY_SCHEMA_VERSION, RECEIPT_SCHEMA_VERSION, VERIFICATION_SCHEMA_VERSION, VERSION,
 };
 
 pub fn brief_schema() -> Value {
@@ -15,7 +15,7 @@ pub fn brief_schema() -> Value {
         "commands": {
             "schema": {
                 "purpose": "emit brief capability metadata or a full JSON Schema",
-                "documents": ["brief", "discovery", "receipt", "progress", "verification", "error"]
+                "documents": ["brief", "discovery", "receipt", "progress", "verification", "error", "receipt-recovery"]
             },
             "discover": {
                 "purpose": "read repository evidence and explain selected or omitted checks",
@@ -46,20 +46,23 @@ pub fn brief_schema() -> Value {
             "3": "Git discovery or configuration error",
             "4": "execution or persistence error",
             "5": "receipt parsing or integrity error",
-            "6": "filesystem I/O error"
+            "6": "filesystem I/O error",
+            "7": "checks completed and the durable receipt exists, but standalone receipt publication failed; do not retry run"
         },
         "document_versions": {
             "discovery": DISCOVERY_SCHEMA_VERSION,
             "receipt": RECEIPT_SCHEMA_VERSION,
             "progress": PROGRESS_SCHEMA_VERSION,
             "verification": VERIFICATION_SCHEMA_VERSION,
-            "error": ERROR_SCHEMA_VERSION
+            "error": ERROR_SCHEMA_VERSION,
+            "receipt_recovery": RECEIPT_RECOVERY_SCHEMA_VERSION
         },
         "safety": {
             "shell_interpolation": false,
             "default_upload": false,
             "full_logs": "content-addressed local blobs marked potentially_sensitive",
             "environment_values_recorded": false,
+            "standalone_receipt_publication": "preflighted_no_clobber_with_no_retry_recovery",
             "claim": "evidence captured, not correctness proven"
         }
     })
@@ -73,6 +76,7 @@ pub fn document_schema(document: SchemaDocument) -> Value {
         SchemaDocument::Progress => schema_for::<ProgressEvent>(),
         SchemaDocument::Verification => schema_for::<VerificationReport>(),
         SchemaDocument::Error => schema_for::<ErrorDocument>(),
+        SchemaDocument::ReceiptRecovery => schema_for::<ReceiptRecoveryDocument>(),
     }
 }
 
@@ -88,6 +92,7 @@ pub enum SchemaDocument {
     Progress,
     Verification,
     Error,
+    ReceiptRecovery,
 }
 
 #[cfg(test)]
@@ -126,6 +131,7 @@ mod tests {
             SchemaDocument::Progress,
             SchemaDocument::Verification,
             SchemaDocument::Error,
+            SchemaDocument::ReceiptRecovery,
         ] {
             let schema = document_schema(document);
             assert!(schema.is_object());
@@ -139,6 +145,20 @@ mod tests {
         assert_eq!(
             schema.pointer("/properties/annotations/additionalProperties/type"),
             Some(&Value::String("string".to_owned()))
+        );
+    }
+
+    #[test]
+    fn receipt_recovery_schema_is_closed() {
+        let schema = document_schema(SchemaDocument::ReceiptRecovery);
+        assert_declared_objects_are_closed(&schema, "#");
+        assert_eq!(
+            schema.pointer("/$defs/ReceiptRecoveryAction/enum/0"),
+            Some(&Value::String("do_not_retry_run".to_owned()))
+        );
+        assert_eq!(
+            schema.pointer("/$defs/ReceiptCommandState/enum/0"),
+            Some(&Value::String("checks_completed".to_owned()))
         );
     }
 }
