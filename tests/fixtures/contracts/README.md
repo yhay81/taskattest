@@ -18,7 +18,8 @@ When a contract intentionally changes:
 The integration test verifies byte-level fixture SHA-256, exact pretty-JSON
 round trips, canonical payload and receipt-ID binding, offline semantic
 verification, stable rejection signals, and manifest coverage. Raw-text
-mutations separately cover duplicate JSON keys because parsing them through a
-generic JSON value would discard the ambiguity under last-key-wins semantics.
+mutations separately cover duplicate JSON keys, including inside extensible
+maps, because parsing them through a generic JSON value would discard the
+ambiguity under last-key-wins semantics.
 The repository attributes force LF bytes in this directory on Windows, macOS,
 and Linux.

@@ -59,8 +59,9 @@ Follow [RECEIPT_RECOVERY.md](RECEIPT_RECOVERY.md); do not rerun the checks.
 
 `taskattest verify`:
 
-1. requires the exact published receipt shape, rejecting duplicate, unknown,
-   or omitted fields before they can disappear during deserialization;
+1. requires the exact published receipt shape, rejecting duplicate keys in
+   every JSON object plus unknown or omitted fields before they can disappear
+   during deserialization;
 2. checks the receipt schema version;
 3. recomputes the canonical payload digest and derived ID;
 4. validates source, selection, timing, log-reference, and outcome invariants;

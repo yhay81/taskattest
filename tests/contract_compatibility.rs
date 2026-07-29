@@ -258,3 +258,27 @@ fn declared_v1_mutations_fail_closed() {
         );
     }
 }
+
+#[test]
+fn self_consistent_receipt_rejects_duplicate_annotation_keys() {
+    let bytes = fs::read(corpus_root().join("receipt.incomplete.json")).expect("read base receipt");
+    let mut receipt = parse_receipt_document(&bytes).expect("parse base receipt");
+    receipt
+        .payload
+        .annotations
+        .insert("review".to_owned(), "approved".to_owned());
+    let rebound = build_receipt(receipt.payload).expect("rebind annotated receipt");
+    let serialized = serde_json::to_string_pretty(&rebound).expect("serialize annotated receipt");
+    let needle = "    \"review\": \"approved\"";
+    assert_eq!(serialized.matches(needle).count(), 1);
+    let ambiguous = serialized.replacen(
+        needle,
+        "    \"review\": \"rejected\",\n    \"review\": \"approved\"",
+        1,
+    );
+
+    let error =
+        parse_receipt_document(ambiguous.as_bytes()).expect_err("duplicate annotation must fail");
+    assert_eq!(error.code, "json_invalid");
+    assert!(error.message.contains("duplicate JSON object key"));
+}
