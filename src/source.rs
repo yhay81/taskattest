@@ -151,14 +151,32 @@ fn update_length_prefixed(hasher: &mut Sha256, bytes: &[u8]) {
     hasher.update(bytes);
 }
 
-pub fn write_json_atomic(path: &Path, value: &impl serde::Serialize) -> Result<(), TaskError> {
-    let parent = path.parent().ok_or_else(|| {
-        TaskError::execution(format!("output path has no parent: {}", path.display()))
-    })?;
+pub fn preflight_json_output(path: &Path) -> Result<(), TaskError> {
+    let parent = json_output_parent(path)?;
     std::fs::create_dir_all(parent)
         .map_err(|error| TaskError::io("create output directory", parent, error))?;
-    let file_name = path
-        .file_name()
+    let metadata = std::fs::metadata(parent)
+        .map_err(|error| TaskError::io("inspect output directory", parent, error))?;
+    if !metadata.is_dir() {
+        return Err(TaskError::new(
+            "output_parent_invalid",
+            format!("output parent is not a directory: {}", parent.display()),
+            4,
+        ));
+    }
+    match std::fs::symlink_metadata(path) {
+        Ok(_) => Err(TaskError::new(
+            "output_already_exists",
+            format!("receipt output already exists: {}", path.display()),
+            4,
+        )),
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => Ok(()),
+        Err(error) => Err(TaskError::io("inspect receipt output", path, error)),
+    }
+}
+
+fn json_output_parent(path: &Path) -> Result<&Path, TaskError> {
+    path.file_name()
         .and_then(|name| name.to_str())
         .ok_or_else(|| {
             TaskError::execution(format!(
@@ -166,6 +184,23 @@ pub fn write_json_atomic(path: &Path, value: &impl serde::Serialize) -> Result<(
                 path.display()
             ))
         })?;
+    let parent = path.parent().ok_or_else(|| {
+        TaskError::execution(format!("output path has no parent: {}", path.display()))
+    })?;
+    Ok(if parent.as_os_str().is_empty() {
+        Path::new(".")
+    } else {
+        parent
+    })
+}
+
+pub fn write_json_atomic(path: &Path, value: &impl serde::Serialize) -> Result<(), TaskError> {
+    preflight_json_output(path)?;
+    let parent = json_output_parent(path)?;
+    let file_name = path
+        .file_name()
+        .and_then(|name| name.to_str())
+        .expect("preflight validated the UTF-8 file name");
     let mut allocated = None;
     for _ in 0..100 {
         let sequence = JSON_TEMPORARY_SEQUENCE.fetch_add(1, Ordering::Relaxed);
@@ -202,8 +237,9 @@ pub fn write_json_atomic(path: &Path, value: &impl serde::Serialize) -> Result<(
             .map_err(|error| TaskError::io("sync temporary JSON file", &temporary, error))?;
         std::fs::hard_link(&temporary, path)
             .map_err(|error| TaskError::io("publish JSON file without overwriting", path, error))?;
-        std::fs::remove_file(&temporary)
-            .map_err(|error| TaskError::io("remove temporary JSON file", &temporary, error))?;
+        // The requested path is committed at this point. A temporary-link cleanup
+        // failure must not turn durable publication into an ambiguous retry signal.
+        let _ = std::fs::remove_file(&temporary);
         Ok(())
     })();
     if result.is_err() {
@@ -270,6 +306,20 @@ mod tests {
         let path = directory.path().join("receipt.json");
         std::fs::write(&path, "original\n").expect("write existing file");
         assert!(write_json_atomic(&path, &serde_json::json!({"new": true})).is_err());
+        assert_eq!(
+            std::fs::read_to_string(path).expect("read existing file"),
+            "original\n"
+        );
+    }
+
+    #[test]
+    fn output_preflight_rejects_an_existing_target() {
+        let directory = tempfile::tempdir().expect("temporary directory");
+        let path = directory.path().join("receipt.json");
+        std::fs::write(&path, "original\n").expect("write existing file");
+        let error = preflight_json_output(&path).expect_err("existing target must fail");
+        assert_eq!(error.code, "output_already_exists");
+        assert_eq!(error.exit_code, 4);
         assert_eq!(
             std::fs::read_to_string(path).expect("read existing file"),
             "original\n"

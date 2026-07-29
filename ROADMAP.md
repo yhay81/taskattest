@@ -65,6 +65,12 @@ timing, and outcome failures, including self-consistent attacker-recomputed
 digests. The v0.2 and v0.3 release notes record contract preservation; no
 migration is required.
 
+Standalone receipt publication is preflighted before checks run. A late
+destination race preserves the primary durable receipt, returns it on stdout,
+emits a versioned no-retry recovery document on stderr, and uses a distinct
+exit class. The published receipt v1 and normal error v1 documents are
+unchanged.
+
 ### Discovery accuracy, correctness, and security
 
 - A published labeled corpus contains at least 100 representative projects,

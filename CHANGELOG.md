@@ -8,6 +8,9 @@ semantic versioning.
 
 ### Added
 
+- Added a closed `taskattest.receipt-recovery.v1` machine document and
+  dedicated exit code 7 for standalone receipt publication races after checks
+  have completed.
 - Added platform-specific, checksum- and provenance-verified native
   installation, update, and removal guidance.
 - Added weekly installation smoke tests on Linux x86_64, macOS Apple Silicon
@@ -17,6 +20,11 @@ semantic versioning.
 
 ### Fixed
 
+- Rejected detectable `--receipt-out` failures before executing checks and
+  retained the durable receipt identity with an explicit `do_not_retry_run`
+  action for late publication failures.
+- Routed NDJSON progress to stderr as documented, leaving stdout exclusively
+  for the final receipt.
 - Rejected performance evidence with a non-canonical commit identity,
   incomplete runner metadata, a non-raw sample marker, or reused sample paths.
 

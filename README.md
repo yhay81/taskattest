@@ -2,7 +2,7 @@
 
 Evidence-backed verification receipts for software changes.
 
-> Status: 0.2 release. The end-to-end local workflow is implemented
+> Status: 0.3 release. The end-to-end local workflow is implemented
 > and covered by unit and CLI tests on Linux, macOS, and Windows.
 
 TaskAttest discovers the checks a repository already trusts, explains why each
@@ -101,16 +101,23 @@ taskattest run \
 By default, receipts and logs are stored under
 `<git-dir>/taskattest/{receipts,blobs}` so they do not alter the workspace.
 `--state-dir` selects another local store. Existing receipt output files and
-content-addressed evidence are never overwritten.
+content-addressed evidence are never overwritten. Detectable
+`--receipt-out` failures are rejected before checks start. If the destination
+changes after preflight, TaskAttest returns exit 7, writes the durable receipt
+to stdout, and emits a `taskattest.receipt-recovery.v1` document on stderr.
+Do not rerun the checks in that state; reconcile the stored receipt instead.
 
 Use `--format ndjson` for progress events on stderr and a final receipt on
 stdout. `--quiet` suppresses progress. `taskattest schema --document brief
 --format json` emits the bounded machine contract; full JSON Schemas are
-available for discovery, receipt, progress, verification, and error documents.
+available for discovery, receipt, progress, verification, error, and
+receipt-recovery documents.
 
 See [docs/CONFIGURATION.md](docs/CONFIGURATION.md) for explicit check
 configuration and [docs/RECEIPTS.md](docs/RECEIPTS.md) for the trust model,
-storage layout, and verification limits.
+storage layout, and verification limits. See
+[docs/RECEIPT_RECOVERY.md](docs/RECEIPT_RECOVERY.md) for the no-retry
+reconciliation procedure.
 
 ## Safety boundaries
 
@@ -141,8 +148,9 @@ cargo package --locked --allow-dirty
 ```
 
 The test suite covers source mutation, failed checks, timeout and process-tree
-cleanup, log retention, receipt tampering, no-clobber publication, CI
-replacement mapping, and discovery across all four initial ecosystems.
+cleanup, log retention, receipt tampering, pre-execution output refusal,
+post-execution no-retry recovery, no-clobber publication, CI replacement
+mapping, and discovery across all four initial ecosystems.
 
 ## Release integrity
 
