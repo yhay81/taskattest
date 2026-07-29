@@ -40,6 +40,15 @@ jobs:
                   json.load(handle)
           print(f"validated {len(fixtures)} contract fixtures")
           PY
+      - name: Discovery accuracy corpus
+        run: |
+          python3 tests/fixtures/discovery/v0.1/generate_corpus.py --check
+          cargo build --locked
+          python3 tests/fixtures/discovery/v0.1/evaluate.py \
+            --binary target/debug/taskattest \
+            --corpus tests/fixtures/discovery/v0.1/corpus.json \
+            --expected tests/fixtures/discovery/v0.1/metrics.json \
+            --output "${RUNNER_TEMP}/taskattest-discovery-metrics.json"
       - name: Benchmark harness
         shell: bash
         run: |
