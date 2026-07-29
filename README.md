@@ -148,9 +148,10 @@ cargo package --locked --allow-dirty
 ```
 
 The test suite covers source mutation, failed checks, timeout and process-tree
-cleanup, log retention, receipt tampering, pre-execution output refusal,
-post-execution no-retry recovery, no-clobber publication, CI replacement
-mapping, and discovery across all four initial ecosystems.
+cleanup, log retention, receipt tampering and duplicate-key ambiguity,
+pre-execution output refusal, post-execution no-retry recovery, no-clobber
+publication, CI replacement mapping, and discovery across all four initial
+ecosystems.
 
 ## Release integrity
 

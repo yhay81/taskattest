@@ -22,8 +22,11 @@ pub fn parse_receipt_document(bytes: &[u8]) -> Result<Receipt, TaskError> {
     if u64::try_from(bytes.len()).unwrap_or(u64::MAX) > MAX_RECEIPT_BYTES {
         return Err(TaskError::receipt("receipt exceeds the 4 MiB safety bound"));
     }
+    // Deserialize the typed contract from the original bytes first. Parsing
+    // through `Value` first would collapse duplicate object keys and could
+    // make an ambiguous receipt appear valid to this reader.
+    let receipt: Receipt = serde_json::from_slice(bytes).map_err(TaskError::from)?;
     let document: serde_json::Value = serde_json::from_slice(bytes).map_err(TaskError::from)?;
-    let receipt: Receipt = serde_json::from_value(document.clone()).map_err(TaskError::from)?;
     let normalized = serde_json::to_value(&receipt)?;
     if document != normalized {
         return Err(TaskError::receipt(

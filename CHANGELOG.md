@@ -20,6 +20,9 @@ semantic versioning.
 
 ### Fixed
 
+- Rejected duplicate JSON keys at outer, flattened-payload, and nested receipt
+  layers before canonical or source verification can approve an ambiguous
+  document.
 - Rejected detectable `--receipt-out` failures before executing checks and
   retained the durable receipt identity with an explicit `do_not_retry_run`
   action for late publication failures.

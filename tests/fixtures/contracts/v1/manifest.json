@@ -117,5 +117,31 @@
       "expected_problem": "receipt outcome is inconsistent with check results and coverage",
       "reason": "a recomputed digest cannot upgrade an incomplete run to passed"
     }
+  ],
+  "raw_rejections": [
+    {
+      "id": "duplicate_receipt_id",
+      "base": "receipt.incomplete.json",
+      "needle": "  \"receipt_id\": \"rcpt_390123ce957703a847fd0d557c29ba05\",",
+      "replacement": "  \"receipt_id\": \"rcpt_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\n  \"receipt_id\": \"rcpt_390123ce957703a847fd0d557c29ba05\",",
+      "expected_error_code": "json_invalid",
+      "reason": "an ambiguous outer identity must fail before canonical verification"
+    },
+    {
+      "id": "duplicate_flattened_schema_version",
+      "base": "receipt.incomplete.json",
+      "needle": "  \"schema_version\": \"taskattest.receipt.v1\",",
+      "replacement": "  \"schema_version\": \"taskattest.receipt.v99\",\n  \"schema_version\": \"taskattest.receipt.v1\",",
+      "expected_error_code": "json_invalid",
+      "reason": "an ambiguous flattened payload field must not inherit last-key-wins semantics"
+    },
+    {
+      "id": "duplicate_nested_source_git_commit",
+      "base": "receipt.incomplete.json",
+      "needle": "  \"source\": {\n    \"git_commit\": null,\n    \"git_ref\": null,",
+      "replacement": "  \"source\": {\n    \"git_commit\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\n    \"git_commit\": null,\n    \"git_ref\": null,",
+      "expected_error_code": "json_invalid",
+      "reason": "an ambiguous nested source identity must fail before source verification"
+    }
   ]
 }
