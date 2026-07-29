@@ -1,0 +1,60 @@
+{
+  "schema_version": "benchmark.thresholds.v1",
+  "benchmark_schema_version": "taskattest.benchmark.v1",
+  "runner": {
+    "os": "Linux",
+    "arch": "x86_64",
+    "image": "ubuntu24"
+  },
+  "warmup_count": 1,
+  "sample_count": 20,
+  "metrics": [
+    {
+      "id": "discovery_wall_p95",
+      "description": "Discover and select 100 checks in the 10,000-file workspace",
+      "source": {
+        "kind": "measurement_process",
+        "measurement_id": "discover_10k_files_100_checks",
+        "field": "wall_seconds"
+      },
+      "statistic": "p95",
+      "maximum": 2.0,
+      "unit": "seconds",
+      "regression": {
+        "max_ratio": 1.5,
+        "absolute_tolerance": 0.05
+      }
+    },
+    {
+      "id": "verification_wall_p95",
+      "description": "Offline verification of a 100-check receipt and 200 blobs",
+      "source": {
+        "kind": "measurement_process",
+        "measurement_id": "verify_100_check_receipt",
+        "field": "wall_seconds"
+      },
+      "statistic": "p95",
+      "maximum": 1.0,
+      "unit": "seconds",
+      "regression": {
+        "max_ratio": 1.5,
+        "absolute_tolerance": 0.05
+      }
+    },
+    {
+      "id": "peak_rss_max",
+      "description": "Maximum peak resident memory across bounded discovery and verification",
+      "source": {
+        "kind": "derived",
+        "field": "peak_rss_mib"
+      },
+      "statistic": "max",
+      "maximum": 256.0,
+      "unit": "MiB",
+      "regression": {
+        "max_ratio": 1.5,
+        "absolute_tolerance": 16.0
+      }
+    }
+  ]
+}
