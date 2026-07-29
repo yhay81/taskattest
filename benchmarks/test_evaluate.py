@@ -17,7 +17,9 @@ class EvaluateTests(unittest.TestCase):
     def sample(self, value: float, rss: float = 8.0) -> dict:
         return {
             "schema_version": "example.benchmark.v1",
+            "generated_at": "2026-07-29T00:00:00Z",
             "git_sha": "a" * 40,
+            "threshold_status": "raw_sample",
             "runner": {
                 "os": "Linux",
                 "arch": "x86_64",
@@ -96,6 +98,46 @@ class EvaluateTests(unittest.TestCase):
             samples[-1].write_text(json.dumps(changed), encoding="utf-8")
             with self.assertRaises(evaluate_module.EvaluationError):
                 evaluate_module.evaluate(config, samples)
+
+    def test_rejects_non_canonical_git_sha(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            directory = Path(temporary)
+            config, samples = self.write_case(directory, [0.2] * 20)
+            for path in samples:
+                changed = json.loads(path.read_text(encoding="utf-8"))
+                changed["git_sha"] = "z" * 40
+                path.write_text(json.dumps(changed), encoding="utf-8")
+            with self.assertRaises(evaluate_module.EvaluationError):
+                evaluate_module.evaluate(config, samples)
+
+    def test_rejects_missing_runner_identity_field(self) -> None:
+        for field in ("os", "arch", "image", "image_version"):
+            with self.subTest(field=field), tempfile.TemporaryDirectory() as temporary:
+                directory = Path(temporary)
+                config, samples = self.write_case(directory, [0.2] * 20)
+                for path in samples:
+                    changed = json.loads(path.read_text(encoding="utf-8"))
+                    del changed["runner"][field]
+                    path.write_text(json.dumps(changed), encoding="utf-8")
+                with self.assertRaises(evaluate_module.EvaluationError):
+                    evaluate_module.evaluate(config, samples)
+
+    def test_rejects_non_raw_sample(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            directory = Path(temporary)
+            config, samples = self.write_case(directory, [0.2] * 20)
+            changed = json.loads(samples[-1].read_text(encoding="utf-8"))
+            changed["threshold_status"] = "observation_only"
+            samples[-1].write_text(json.dumps(changed), encoding="utf-8")
+            with self.assertRaises(evaluate_module.EvaluationError):
+                evaluate_module.evaluate(config, samples)
+
+    def test_rejects_duplicate_sample_paths(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            directory = Path(temporary)
+            config, samples = self.write_case(directory, [0.2] * 20)
+            with self.assertRaises(evaluate_module.EvaluationError):
+                evaluate_module.evaluate(config, [samples[0]] * 20)
 
     def test_versioned_baseline_enforces_noise_aware_limit(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

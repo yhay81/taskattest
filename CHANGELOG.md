@@ -15,6 +15,11 @@ semantic versioning.
 - Enforced the published v1.0 discovery, offline-verification, and peak-memory
   thresholds from 20-sample, warm-start benchmark evidence on Ubuntu 24.04.
 
+### Fixed
+
+- Rejected performance evidence with a non-canonical commit identity,
+  incomplete runner metadata, a non-raw sample marker, or reused sample paths.
+
 ## [0.3.0] - 2026-07-29
 
 ### Compatibility
