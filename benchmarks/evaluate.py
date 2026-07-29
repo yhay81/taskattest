@@ -7,6 +7,7 @@ import argparse
 import hashlib
 import json
 import math
+import re
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -15,6 +16,9 @@ from typing import Any
 
 class EvaluationError(ValueError):
     """Raised when benchmark evidence is incomplete or inconsistent."""
+
+
+RUNNER_FIELDS = ("os", "arch", "image", "image_version")
 
 
 def load_json(path: Path) -> Any:
@@ -31,6 +35,28 @@ def finite_number(value: Any, context: str) -> float:
     if not math.isfinite(number) or number < 0:
         raise EvaluationError(f"{context} must be finite and non-negative")
     return number
+
+
+def canonical_git_sha(value: Any, context: str) -> str:
+    if not isinstance(value, str) or re.fullmatch(r"[0-9a-f]{40}", value) is None:
+        raise EvaluationError(f"{context} must be a canonical 40-character Git SHA")
+    return value
+
+
+def runner_identity(
+    value: Any,
+    context: str,
+    fields: tuple[str, ...] = RUNNER_FIELDS,
+) -> dict[str, str]:
+    if not isinstance(value, dict):
+        raise EvaluationError(f"{context} is missing")
+    identity: dict[str, str] = {}
+    for field in fields:
+        field_value = value.get(field)
+        if not isinstance(field_value, str) or not field_value.strip():
+            raise EvaluationError(f"{context} {field} must be a non-empty string")
+        identity[field] = field_value
+    return identity
 
 
 def nearest_rank(values: list[float], percentile: float) -> float:
@@ -81,42 +107,46 @@ def common_identity(
     git_shas: set[str] = set()
     runners: set[tuple[str, str, str, str]] = set()
     for sample in samples:
+        if not isinstance(sample, dict):
+            raise EvaluationError("each benchmark sample must be a JSON object")
         if sample.get("schema_version") != expected_schema:
             raise EvaluationError(
                 f"expected sample schema {expected_schema!r}, "
                 f"found {sample.get('schema_version')!r}"
             )
-        git_sha = sample.get("git_sha")
-        if not isinstance(git_sha, str) or len(git_sha) != 40:
-            raise EvaluationError("sample git_sha must be a 40-character SHA")
+        if sample.get("threshold_status") != "raw_sample":
+            raise EvaluationError("sample threshold_status must be 'raw_sample'")
+        generated_at = sample.get("generated_at")
+        if not isinstance(generated_at, str) or not generated_at.strip():
+            raise EvaluationError("sample generated_at must be a non-empty string")
+        git_sha = canonical_git_sha(sample.get("git_sha"), "sample git_sha")
         git_shas.add(git_sha)
-        runner = sample.get("runner")
-        if not isinstance(runner, dict):
-            raise EvaluationError("sample runner identity is missing")
-        runners.add(
-            tuple(
-                str(runner.get(field, ""))
-                for field in ("os", "arch", "image", "image_version")
-            )
-        )
+        runner = runner_identity(sample.get("runner"), "sample runner identity")
+        runners.add(tuple(runner[field] for field in RUNNER_FIELDS))
     if len(git_shas) != 1:
         raise EvaluationError("all samples must measure the same commit")
     if len(runners) != 1:
         raise EvaluationError("all samples must use the same runner image")
     runner_tuple = runners.pop()
-    return git_shas.pop(), dict(
-        zip(("os", "arch", "image", "image_version"), runner_tuple, strict=True)
-    )
+    return git_shas.pop(), dict(zip(RUNNER_FIELDS, runner_tuple, strict=True))
 
 
 def baseline_metrics(path: Path | None) -> tuple[dict[str, float], dict[str, Any] | None]:
     if path is None:
         return {}, None
     baseline = load_json(path)
+    if not isinstance(baseline, dict):
+        raise EvaluationError("baseline must be a JSON object")
     if baseline.get("schema_version") != "benchmark.evaluation.v1":
         raise EvaluationError("baseline must use benchmark.evaluation.v1")
-    if not baseline.get("passed"):
+    if baseline.get("passed") is not True:
         raise EvaluationError("baseline must be a passing evaluation")
+    baseline_git_sha = canonical_git_sha(
+        baseline.get("git_sha"), "baseline git_sha"
+    )
+    baseline_runner = runner_identity(
+        baseline.get("runner"), "baseline runner identity"
+    )
     metrics = baseline.get("metrics")
     if not isinstance(metrics, list):
         raise EvaluationError("baseline metrics are missing")
@@ -132,8 +162,8 @@ def baseline_metrics(path: Path | None) -> tuple[dict[str, float], dict[str, Any
         "path": str(path),
         "benchmark_schema_version": baseline.get("benchmark_schema_version"),
         "generated_at": baseline.get("generated_at"),
-        "git_sha": baseline.get("git_sha"),
-        "runner": baseline.get("runner"),
+        "git_sha": baseline_git_sha,
+        "runner": baseline_runner,
         "sample_count": baseline.get("sample_count"),
         "config_sha256": baseline.get("config_sha256"),
     }
@@ -146,6 +176,8 @@ def evaluate(
 ) -> dict[str, Any]:
     config_bytes = config_path.read_bytes()
     config = json.loads(config_bytes)
+    if not isinstance(config, dict):
+        raise EvaluationError("config must be a JSON object")
     if config.get("schema_version") != "benchmark.thresholds.v1":
         raise EvaluationError("config must use benchmark.thresholds.v1")
     expected_count = config.get("sample_count")
@@ -155,14 +187,19 @@ def evaluate(
         raise EvaluationError(
             f"expected {expected_count} samples, found {len(sample_paths)}"
         )
+    resolved_paths = [path.resolve() for path in sample_paths]
+    if len(set(resolved_paths)) != len(resolved_paths):
+        raise EvaluationError("sample paths must be distinct")
     samples = [load_json(path) for path in sample_paths]
     expected_schema = config.get("benchmark_schema_version")
-    if not isinstance(expected_schema, str):
+    if not isinstance(expected_schema, str) or not expected_schema.strip():
         raise EvaluationError("benchmark_schema_version is required")
     git_sha, runner = common_identity(samples, expected_schema)
-    required_runner = config.get("runner")
-    if not isinstance(required_runner, dict):
-        raise EvaluationError("config runner identity is required")
+    required_runner = runner_identity(
+        config.get("runner"),
+        "config runner identity",
+        ("os", "arch", "image"),
+    )
     for field in ("os", "arch", "image"):
         if runner[field] != required_runner.get(field):
             raise EvaluationError(
@@ -180,8 +217,6 @@ def evaluate(
         if baseline["config_sha256"] != config_sha256:
             raise EvaluationError("baseline threshold config digest does not match")
         baseline_runner = baseline["runner"]
-        if not isinstance(baseline_runner, dict):
-            raise EvaluationError("baseline runner identity is missing")
         for field in ("os", "arch", "image"):
             if baseline_runner.get(field) != runner[field]:
                 raise EvaluationError(
