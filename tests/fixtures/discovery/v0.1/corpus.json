@@ -1,0 +1,2330 @@
+{
+  "cases": [
+    {
+      "check_ecosystems": {
+        "js-build": "javascript",
+        "js-format-check": "javascript",
+        "js-lint": "javascript",
+        "js-test": "javascript",
+        "js-typecheck": "javascript"
+      },
+      "description": "standard npm verification scripts",
+      "ecosystems": [
+        "javascript"
+      ],
+      "expected_check_ids": [
+        "js-build",
+        "js-format-check",
+        "js-lint",
+        "js-test",
+        "js-typecheck"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "package-lock.json": "{}\n",
+        "package.json": "{\n  \"name\": \"discovery-fixture\",\n  \"private\": true,\n  \"scripts\": {\n    \"build\": \"tsc\",\n    \"format:check\": \"prettier --check .\",\n    \"lint\": \"eslint .\",\n    \"test\": \"vitest run\",\n    \"typecheck\": \"tsc --noEmit\"\n  }\n}\n"
+      },
+      "id": "javascript-01",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "js-test": "javascript"
+      },
+      "description": "pnpm test",
+      "ecosystems": [
+        "javascript"
+      ],
+      "expected_check_ids": [
+        "js-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "package.json": "{\n  \"name\": \"discovery-fixture\",\n  \"private\": true,\n  \"scripts\": {\n    \"test\": \"vitest run\"\n  }\n}\n",
+        "pnpm-lock.yaml": "lockfileVersion: '9.0'\n"
+      },
+      "id": "javascript-02",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "js-build": "javascript",
+        "js-lint-ci": "javascript"
+      },
+      "description": "Yarn lint and build",
+      "ecosystems": [
+        "javascript"
+      ],
+      "expected_check_ids": [
+        "js-build",
+        "js-lint-ci"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "package.json": "{\n  \"name\": \"discovery-fixture\",\n  \"private\": true,\n  \"scripts\": {\n    \"build\": \"vite build\",\n    \"lint:ci\": \"eslint .\"\n  }\n}\n",
+        "yarn.lock": "# fixture\n"
+      },
+      "id": "javascript-03",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "js-format-check": "javascript",
+        "js-typecheck": "javascript"
+      },
+      "description": "Bun type and format checks",
+      "ecosystems": [
+        "javascript"
+      ],
+      "expected_check_ids": [
+        "js-format-check",
+        "js-typecheck"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "bun.lock": "fixture\n",
+        "package.json": "{\n  \"name\": \"discovery-fixture\",\n  \"private\": true,\n  \"scripts\": {\n    \"format:check\": \"prettier --check .\",\n    \"typecheck\": \"tsc --noEmit\"\n  }\n}\n"
+      },
+      "id": "javascript-04",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "js-lint": "javascript",
+        "js-test-unit": "javascript"
+      },
+      "description": "named npm checks",
+      "ecosystems": [
+        "javascript"
+      ],
+      "expected_check_ids": [
+        "js-lint",
+        "js-test-unit"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "npm-shrinkwrap.json": "{}\n",
+        "package.json": "{\n  \"name\": \"discovery-fixture\",\n  \"private\": true,\n  \"scripts\": {\n    \"lint\": \"eslint .\",\n    \"test:unit\": \"node --test\"\n  }\n}\n"
+      },
+      "id": "javascript-05",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {},
+      "description": "interactive scripts are omitted",
+      "ecosystems": [
+        "javascript"
+      ],
+      "expected_check_ids": [],
+      "expected_coverage_gaps": [
+        "no checks discovered; add a supported manifest or .taskattest.toml"
+      ],
+      "files": {
+        "package.json": "{\n  \"name\": \"discovery-fixture\",\n  \"private\": true,\n  \"scripts\": {\n    \"dev\": \"vite\",\n    \"start\": \"node app.js\",\n    \"test:watch\": \"vitest\"\n  }\n}\n"
+      },
+      "id": "javascript-06",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {},
+      "description": "mutating and watch commands are omitted",
+      "ecosystems": [
+        "javascript"
+      ],
+      "expected_check_ids": [],
+      "expected_coverage_gaps": [
+        "no checks discovered; add a supported manifest or .taskattest.toml"
+      ],
+      "files": {
+        "package.json": "{\n  \"name\": \"discovery-fixture\",\n  \"private\": true,\n  \"scripts\": {\n    \"format:check\": \"prettier . --write\",\n    \"lint\": \"eslint . --fix\",\n    \"test\": \"vitest --watch\"\n  }\n}\n"
+      },
+      "id": "javascript-07",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "js-check-types-ci": "javascript"
+      },
+      "description": "check-types alias",
+      "ecosystems": [
+        "javascript"
+      ],
+      "expected_check_ids": [
+        "js-check-types-ci"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "package.json": "{\n  \"name\": \"discovery-fixture\",\n  \"private\": true,\n  \"scripts\": {\n    \"check-types:ci\": \"tsc --noEmit\"\n  }\n}\n"
+      },
+      "id": "javascript-08",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "js-type-check": "javascript"
+      },
+      "description": "type-check alias",
+      "ecosystems": [
+        "javascript"
+      ],
+      "expected_check_ids": [
+        "js-type-check"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "package.json": "{\n  \"name\": \"discovery-fixture\",\n  \"private\": true,\n  \"scripts\": {\n    \"type-check\": \"tsc --noEmit\"\n  }\n}\n"
+      },
+      "id": "javascript-09",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "js-tsc": "javascript"
+      },
+      "description": "tsc alias",
+      "ecosystems": [
+        "javascript"
+      ],
+      "expected_check_ids": [
+        "js-tsc"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "package.json": "{\n  \"name\": \"discovery-fixture\",\n  \"private\": true,\n  \"scripts\": {\n    \"tsc\": \"tsc --noEmit\"\n  }\n}\n"
+      },
+      "id": "javascript-10",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "js-fmt-check": "javascript"
+      },
+      "description": "fmt check name",
+      "ecosystems": [
+        "javascript"
+      ],
+      "expected_check_ids": [
+        "js-fmt-check"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "package.json": "{\n  \"name\": \"discovery-fixture\",\n  \"private\": true,\n  \"scripts\": {\n    \"fmt:check\": \"dprint check\"\n  }\n}\n"
+      },
+      "id": "javascript-11",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "js-format": "javascript"
+      },
+      "description": "format check command",
+      "ecosystems": [
+        "javascript"
+      ],
+      "expected_check_ids": [
+        "js-format"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "package.json": "{\n  \"name\": \"discovery-fixture\",\n  \"private\": true,\n  \"scripts\": {\n    \"format\": \"prettier --check .\"\n  }\n}\n"
+      },
+      "id": "javascript-12",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "js-build-prod": "javascript",
+        "js-lint-ci": "javascript",
+        "js-test-ci": "javascript"
+      },
+      "description": "colon-qualified checks",
+      "ecosystems": [
+        "javascript"
+      ],
+      "expected_check_ids": [
+        "js-build-prod",
+        "js-lint-ci",
+        "js-test-ci"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "package.json": "{\n  \"name\": \"discovery-fixture\",\n  \"private\": true,\n  \"scripts\": {\n    \"build:prod\": \"vite build\",\n    \"lint:ci\": \"eslint .\",\n    \"test:ci\": \"node --test\"\n  }\n}\n"
+      },
+      "id": "javascript-13",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {},
+      "description": "verification substrings are not check names",
+      "ecosystems": [
+        "javascript"
+      ],
+      "expected_check_ids": [],
+      "expected_coverage_gaps": [
+        "no checks discovered; add a supported manifest or .taskattest.toml"
+      ],
+      "files": {
+        "package.json": "{\n  \"name\": \"discovery-fixture\",\n  \"private\": true,\n  \"scripts\": {\n    \"contest\": \"node contest.js\",\n    \"rebuild\": \"node rebuild.js\",\n    \"start:test\": \"node app.js\"\n  }\n}\n"
+      },
+      "id": "javascript-14",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "js-test": "javascript"
+      },
+      "description": "package scripts are described but never run",
+      "ecosystems": [
+        "javascript"
+      ],
+      "expected_check_ids": [
+        "js-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "package.json": "{\n  \"name\": \"discovery-fixture\",\n  \"private\": true,\n  \"scripts\": {\n    \"test\": \"python3 -c \\\"from pathlib import Path; Path('taskattest-package-script-tripwire').write_text('ran')\\\"\"\n  }\n}\n"
+      },
+      "id": "javascript-15",
+      "shape": "single-package",
+      "tripwire_paths": [
+        "taskattest-package-script-tripwire"
+      ]
+    },
+    {
+      "check_ecosystems": {},
+      "description": "empty package scripts",
+      "ecosystems": [
+        "javascript"
+      ],
+      "expected_check_ids": [],
+      "expected_coverage_gaps": [
+        "no checks discovered; add a supported manifest or .taskattest.toml"
+      ],
+      "files": {
+        "package.json": "{\n  \"name\": \"discovery-fixture\",\n  \"private\": true,\n  \"scripts\": {}\n}\n"
+      },
+      "id": "javascript-16",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "js-test": "javascript"
+      },
+      "description": "snapshot updater is omitted",
+      "ecosystems": [
+        "javascript"
+      ],
+      "expected_check_ids": [
+        "js-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "package.json": "{\n  \"name\": \"discovery-fixture\",\n  \"private\": true,\n  \"scripts\": {\n    \"test\": \"node --test\",\n    \"test:snapshot\": \"vitest -u\"\n  }\n}\n"
+      },
+      "id": "javascript-17",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "js-lint": "javascript"
+      },
+      "description": "lint updater is omitted",
+      "ecosystems": [
+        "javascript"
+      ],
+      "expected_check_ids": [
+        "js-lint"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "package.json": "{\n  \"name\": \"discovery-fixture\",\n  \"private\": true,\n  \"scripts\": {\n    \"lint\": \"eslint .\",\n    \"lint:update\": \"eslint . --fix\"\n  }\n}\n"
+      },
+      "id": "javascript-18",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "js-build-ci": "javascript"
+      },
+      "description": "build and development distinction",
+      "ecosystems": [
+        "javascript"
+      ],
+      "expected_check_ids": [
+        "js-build-ci"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "package.json": "{\n  \"name\": \"discovery-fixture\",\n  \"private\": true,\n  \"scripts\": {\n    \"build:ci\": \"vite build\",\n    \"dev:build\": \"vite\"\n  }\n}\n"
+      },
+      "id": "javascript-19",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "js-build": "javascript",
+        "js-lint": "javascript",
+        "js-test": "javascript",
+        "js-typecheck": "javascript"
+      },
+      "description": "complete npm baseline",
+      "ecosystems": [
+        "javascript"
+      ],
+      "expected_check_ids": [
+        "js-build",
+        "js-lint",
+        "js-test",
+        "js-typecheck"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "package-lock.json": "{}\n",
+        "package.json": "{\n  \"name\": \"discovery-fixture\",\n  \"private\": true,\n  \"scripts\": {\n    \"build\": \"tsc\",\n    \"lint\": \"eslint .\",\n    \"test\": \"node --test\",\n    \"typecheck\": \"tsc --noEmit\"\n  }\n}\n"
+      },
+      "id": "javascript-20",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "python-mypy": "python",
+        "python-ruff": "python",
+        "python-test": "python"
+      },
+      "description": "PEP 621 dependencies",
+      "ecosystems": [
+        "python"
+      ],
+      "expected_check_ids": [
+        "python-mypy",
+        "python-ruff",
+        "python-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "pyproject.toml": "[project]\nname = \"fixture\"\nversion = \"0.1.0\"\ndependencies = [\"pytest>=8\", \"ruff>=0.5\", \"mypy>=1\"]\n"
+      },
+      "id": "python-01",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "python-test": "python"
+      },
+      "description": "optional dependency group",
+      "ecosystems": [
+        "python"
+      ],
+      "expected_check_ids": [
+        "python-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "pyproject.toml": "[project]\nname = \"fixture\"\nversion = \"0.1.0\"\n[project.optional-dependencies]\ntest = [\"pytest>=8\"]\n"
+      },
+      "id": "python-02",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "python-mypy": "python",
+        "python-ruff": "python"
+      },
+      "description": "PEP 735 dependency group",
+      "ecosystems": [
+        "python"
+      ],
+      "expected_check_ids": [
+        "python-mypy",
+        "python-ruff"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "pyproject.toml": "[project]\nname = \"fixture\"\nversion = \"0.1.0\"\n[dependency-groups]\ndev = [\"ruff\", \"mypy\"]\n"
+      },
+      "id": "python-03",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "python-mypy": "python",
+        "python-ruff": "python",
+        "python-test": "python"
+      },
+      "description": "tool configuration tables",
+      "ecosystems": [
+        "python"
+      ],
+      "expected_check_ids": [
+        "python-mypy",
+        "python-ruff",
+        "python-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "pyproject.toml": "[project]\nname = \"fixture\"\nversion = \"0.1.0\"\n[tool.pytest.ini_options]\ntestpaths = [\"tests\"]\n[tool.ruff]\nline-length = 100\n[tool.mypy]\nstrict = true\n"
+      },
+      "id": "python-04",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "python-ruff": "python",
+        "python-test": "python"
+      },
+      "description": "Poetry dependency group",
+      "ecosystems": [
+        "python"
+      ],
+      "expected_check_ids": [
+        "python-ruff",
+        "python-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "pyproject.toml": "[tool.poetry]\nname = \"fixture\"\nversion = \"0.1.0\"\n[tool.poetry.group.dev.dependencies]\npytest = \"^8\"\nruff = \"^0.5\"\n"
+      },
+      "id": "python-05",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "python-mypy": "python",
+        "python-test": "python"
+      },
+      "description": "uv development dependencies",
+      "ecosystems": [
+        "python"
+      ],
+      "expected_check_ids": [
+        "python-mypy",
+        "python-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "pyproject.toml": "[project]\nname = \"fixture\"\nversion = \"0.1.0\"\n[tool.uv]\ndev-dependencies = [\"pytest\", \"mypy\"]\n"
+      },
+      "id": "python-06",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "python-mypy": "python",
+        "python-ruff": "python"
+      },
+      "description": "PDM development dependencies",
+      "ecosystems": [
+        "python"
+      ],
+      "expected_check_ids": [
+        "python-mypy",
+        "python-ruff"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "pyproject.toml": "[project]\nname = \"fixture\"\nversion = \"0.1.0\"\n[tool.pdm.dev-dependencies]\nquality = [\"ruff\", \"mypy\"]\n"
+      },
+      "id": "python-07",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "python-ruff": "python",
+        "python-test": "python"
+      },
+      "description": "Hatch environment dependencies",
+      "ecosystems": [
+        "python"
+      ],
+      "expected_check_ids": [
+        "python-ruff",
+        "python-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "pyproject.toml": "[project]\nname = \"fixture\"\nversion = \"0.1.0\"\n[tool.hatch.envs.default]\ndependencies = [\"pytest\", \"ruff\"]\n"
+      },
+      "id": "python-08",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "python-ruff": "python",
+        "python-test": "python"
+      },
+      "description": "requirements file",
+      "ecosystems": [
+        "python"
+      ],
+      "expected_check_ids": [
+        "python-ruff",
+        "python-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "pyproject.toml": "[project]\nname = \"fixture\"\nversion = \"0.1.0\"\n",
+        "requirements.txt": "pytest==8.3\nruff>=0.5\n"
+      },
+      "id": "python-09",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "python-mypy": "python",
+        "python-test": "python"
+      },
+      "description": "requirements-dev and tox",
+      "ecosystems": [
+        "python"
+      ],
+      "expected_check_ids": [
+        "python-mypy",
+        "python-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "pyproject.toml": "[project]\nname = \"fixture\"\nversion = \"0.1.0\"\n",
+        "requirements-dev.txt": "mypy>=1\n",
+        "tox.ini": "[tox]\nenv_list = py\n"
+      },
+      "id": "python-10",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "python-test": "python"
+      },
+      "description": "tox configuration",
+      "ecosystems": [
+        "python"
+      ],
+      "expected_check_ids": [
+        "python-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "pyproject.toml": "[project]\nname = \"fixture\"\nversion = \"0.1.0\"\n",
+        "tox.ini": "[tox]\nenv_list = py\n"
+      },
+      "id": "python-11",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "python-test": "python"
+      },
+      "description": "pytest plugin evidence",
+      "ecosystems": [
+        "python"
+      ],
+      "expected_check_ids": [
+        "python-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "pyproject.toml": "[project]\nname = \"fixture\"\nversion = \"0.1.0\"\ndependencies = [\"pytest-cov>=5\"]\n"
+      },
+      "id": "python-12",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "python-ruff": "python"
+      },
+      "description": "PEP 508 direct reference",
+      "ecosystems": [
+        "python"
+      ],
+      "expected_check_ids": [
+        "python-ruff"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "pyproject.toml": "[project]\nname = \"fixture\"\nversion = \"0.1.0\"\ndependencies = [\"ruff @ https://example.invalid/ruff.whl\"]\n"
+      },
+      "id": "python-13",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "python-mypy": "python",
+        "python-ruff": "python",
+        "python-test": "python"
+      },
+      "description": "case-normalized distribution names",
+      "ecosystems": [
+        "python"
+      ],
+      "expected_check_ids": [
+        "python-mypy",
+        "python-ruff",
+        "python-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "pyproject.toml": "[project]\nname = \"fixture\"\nversion = \"0.1.0\"\ndependencies = [\"PyTest>=8\", \"RUFF==0.5\", \"MyPy~=1.10\"]\n"
+      },
+      "id": "python-14",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {},
+      "description": "irrelevant dependency substrings",
+      "ecosystems": [
+        "python"
+      ],
+      "expected_check_ids": [],
+      "expected_coverage_gaps": [
+        "no checks discovered; add a supported manifest or .taskattest.toml"
+      ],
+      "files": {
+        "pyproject.toml": "[project]\nname = \"scruffy\"\nversion = \"0.1.0\"\ndependencies = [\"scruffy>=0.3\", \"mypy-boto3-s3>=1\"]\n"
+      },
+      "id": "python-15",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {},
+      "description": "metadata substrings are not tool evidence",
+      "ecosystems": [
+        "python"
+      ],
+      "expected_check_ids": [],
+      "expected_coverage_gaps": [
+        "no checks discovered; add a supported manifest or .taskattest.toml"
+      ],
+      "files": {
+        "pyproject.toml": "[build-system]\nrequires = [\"ruff-build-helper\"]\nbuild-backend = \"fixture.backend\"\n[project]\nname = \"pytest-mypy-not-a-tool\"\nversion = \"0.1.0\"\ndescription = \"ruff and pytest are words, not declared tools\"\n"
+      },
+      "id": "python-16",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {},
+      "description": "bare URLs and editable paths are not distributions",
+      "ecosystems": [
+        "python"
+      ],
+      "expected_check_ids": [],
+      "expected_coverage_gaps": [
+        "no checks discovered; add a supported manifest or .taskattest.toml"
+      ],
+      "files": {
+        "pyproject.toml": "[project]\nname = \"fixture\"\nversion = \"0.1.0\"\n",
+        "requirements.txt": "https://example.invalid/ruff.whl\n-e ../pytest-helper\n"
+      },
+      "id": "python-17",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "python-ruff": "python",
+        "python-test": "python"
+      },
+      "description": "tox distribution fallback",
+      "ecosystems": [
+        "python"
+      ],
+      "expected_check_ids": [
+        "python-ruff",
+        "python-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "pyproject.toml": "[project]\nname = \"fixture\"\nversion = \"0.1.0\"\ndependencies = [\"tox\", \"ruff\"]\n"
+      },
+      "id": "python-18",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "python-mypy": "python",
+        "python-test": "python"
+      },
+      "description": "Poetry main dependencies",
+      "ecosystems": [
+        "python"
+      ],
+      "expected_check_ids": [
+        "python-mypy",
+        "python-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "pyproject.toml": "[tool.poetry]\nname = \"fixture\"\nversion = \"0.1.0\"\n[tool.poetry.dependencies]\npython = \"^3.11\"\npytest = \"^8\"\nmypy = \"^1\"\n"
+      },
+      "id": "python-19",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "python-mypy": "python",
+        "python-ruff": "python",
+        "python-test": "python"
+      },
+      "description": "multiple optional groups",
+      "ecosystems": [
+        "python"
+      ],
+      "expected_check_ids": [
+        "python-mypy",
+        "python-ruff",
+        "python-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "pyproject.toml": "[project]\nname = \"fixture\"\nversion = \"0.1.0\"\n[project.optional-dependencies]\ntest = [\"pytest\"]\nquality = [\"ruff\", \"mypy\"]\n"
+      },
+      "id": "python-20",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "rust-build": "rust",
+        "rust-format": "rust",
+        "rust-lint": "rust",
+        "rust-test": "rust"
+      },
+      "description": "Rust manifest discovery",
+      "ecosystems": [
+        "rust"
+      ],
+      "expected_check_ids": [
+        "rust-build",
+        "rust-format",
+        "rust-lint",
+        "rust-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "Cargo.toml": "[package]\nname = \"discovery-fixture-01\"\nversion = \"0.1.0\"\nedition = \"2024\"\n"
+      },
+      "id": "rust-01",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "rust-build": "rust",
+        "rust-format": "rust",
+        "rust-lint": "rust",
+        "rust-test": "rust"
+      },
+      "description": "Rust manifest discovery with lockfile",
+      "ecosystems": [
+        "rust"
+      ],
+      "expected_check_ids": [
+        "rust-build",
+        "rust-format",
+        "rust-lint",
+        "rust-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "Cargo.lock": "version = 4\n",
+        "Cargo.toml": "[package]\nname = \"discovery-fixture-02\"\nversion = \"0.1.0\"\nedition = \"2024\"\n"
+      },
+      "id": "rust-02",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "rust-build": "rust",
+        "rust-format": "rust",
+        "rust-lint": "rust",
+        "rust-test": "rust"
+      },
+      "description": "Rust manifest discovery",
+      "ecosystems": [
+        "rust"
+      ],
+      "expected_check_ids": [
+        "rust-build",
+        "rust-format",
+        "rust-lint",
+        "rust-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "Cargo.toml": "[package]\nname = \"discovery-fixture-03\"\nversion = \"0.1.0\"\nedition = \"2024\"\n"
+      },
+      "id": "rust-03",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "rust-build": "rust",
+        "rust-format": "rust",
+        "rust-lint": "rust",
+        "rust-test": "rust"
+      },
+      "description": "Rust manifest discovery with lockfile",
+      "ecosystems": [
+        "rust"
+      ],
+      "expected_check_ids": [
+        "rust-build",
+        "rust-format",
+        "rust-lint",
+        "rust-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "Cargo.lock": "version = 4\n",
+        "Cargo.toml": "[workspace]\nresolver = \"2\"\nmembers = [\"crates/core\"]\n\n[workspace.package]\nversion = \"0.1.0\"\n",
+        "crates/core/Cargo.toml": "[package]\nname = \"core\"\nversion = \"0.1.0\"\nedition = \"2024\"\n",
+        "crates/core/src/lib.rs": "pub fn value() -> u8 { 1 }\n"
+      },
+      "id": "rust-04",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "rust-build": "rust",
+        "rust-format": "rust",
+        "rust-lint": "rust",
+        "rust-test": "rust"
+      },
+      "description": "Rust manifest discovery",
+      "ecosystems": [
+        "rust"
+      ],
+      "expected_check_ids": [
+        "rust-build",
+        "rust-format",
+        "rust-lint",
+        "rust-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "Cargo.toml": "[package]\nname = \"discovery-fixture-05\"\nversion = \"0.1.0\"\nedition = \"2024\"\n"
+      },
+      "id": "rust-05",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "rust-build": "rust",
+        "rust-format": "rust",
+        "rust-lint": "rust",
+        "rust-test": "rust"
+      },
+      "description": "Rust manifest discovery with lockfile",
+      "ecosystems": [
+        "rust"
+      ],
+      "expected_check_ids": [
+        "rust-build",
+        "rust-format",
+        "rust-lint",
+        "rust-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "Cargo.lock": "version = 4\n",
+        "Cargo.toml": "[package]\nname = \"discovery-fixture-06\"\nversion = \"0.1.0\"\nedition = \"2024\"\n"
+      },
+      "id": "rust-06",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "rust-build": "rust",
+        "rust-format": "rust",
+        "rust-lint": "rust",
+        "rust-test": "rust"
+      },
+      "description": "Rust manifest discovery",
+      "ecosystems": [
+        "rust"
+      ],
+      "expected_check_ids": [
+        "rust-build",
+        "rust-format",
+        "rust-lint",
+        "rust-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "Cargo.toml": "[package]\nname = \"discovery-fixture-07\"\nversion = \"0.1.0\"\nedition = \"2024\"\n"
+      },
+      "id": "rust-07",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "rust-build": "rust",
+        "rust-format": "rust",
+        "rust-lint": "rust",
+        "rust-test": "rust"
+      },
+      "description": "Rust manifest discovery with lockfile",
+      "ecosystems": [
+        "rust"
+      ],
+      "expected_check_ids": [
+        "rust-build",
+        "rust-format",
+        "rust-lint",
+        "rust-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "Cargo.lock": "version = 4\n",
+        "Cargo.toml": "[workspace]\nresolver = \"2\"\nmembers = [\"crates/core\"]\n\n[workspace.package]\nversion = \"0.1.0\"\n"
+      },
+      "id": "rust-08",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "rust-build": "rust",
+        "rust-format": "rust",
+        "rust-lint": "rust",
+        "rust-test": "rust"
+      },
+      "description": "Rust manifest discovery",
+      "ecosystems": [
+        "rust"
+      ],
+      "expected_check_ids": [
+        "rust-build",
+        "rust-format",
+        "rust-lint",
+        "rust-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "Cargo.toml": "[package]\nname = \"discovery-fixture-09\"\nversion = \"0.1.0\"\nedition = \"2024\"\n"
+      },
+      "id": "rust-09",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "rust-build": "rust",
+        "rust-format": "rust",
+        "rust-lint": "rust",
+        "rust-test": "rust"
+      },
+      "description": "Rust manifest discovery with lockfile",
+      "ecosystems": [
+        "rust"
+      ],
+      "expected_check_ids": [
+        "rust-build",
+        "rust-format",
+        "rust-lint",
+        "rust-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "Cargo.lock": "version = 4\n",
+        "Cargo.toml": "[package]\nname = \"discovery-fixture-10\"\nversion = \"0.1.0\"\nedition = \"2024\"\n"
+      },
+      "id": "rust-10",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "rust-build": "rust",
+        "rust-format": "rust",
+        "rust-lint": "rust",
+        "rust-test": "rust"
+      },
+      "description": "Rust manifest discovery",
+      "ecosystems": [
+        "rust"
+      ],
+      "expected_check_ids": [
+        "rust-build",
+        "rust-format",
+        "rust-lint",
+        "rust-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "Cargo.toml": "[package]\nname = \"discovery-fixture-11\"\nversion = \"0.1.0\"\nedition = \"2024\"\n"
+      },
+      "id": "rust-11",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "rust-build": "rust",
+        "rust-format": "rust",
+        "rust-lint": "rust",
+        "rust-test": "rust"
+      },
+      "description": "Rust manifest discovery with lockfile",
+      "ecosystems": [
+        "rust"
+      ],
+      "expected_check_ids": [
+        "rust-build",
+        "rust-format",
+        "rust-lint",
+        "rust-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "Cargo.lock": "version = 4\n",
+        "Cargo.toml": "[workspace]\nresolver = \"2\"\nmembers = [\"crates/core\"]\n\n[workspace.package]\nversion = \"0.1.0\"\n"
+      },
+      "id": "rust-12",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "rust-build": "rust",
+        "rust-format": "rust",
+        "rust-lint": "rust",
+        "rust-test": "rust"
+      },
+      "description": "Rust manifest discovery",
+      "ecosystems": [
+        "rust"
+      ],
+      "expected_check_ids": [
+        "rust-build",
+        "rust-format",
+        "rust-lint",
+        "rust-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "Cargo.toml": "[package]\nname = \"discovery-fixture-13\"\nversion = \"0.1.0\"\nedition = \"2024\"\n"
+      },
+      "id": "rust-13",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "rust-build": "rust",
+        "rust-format": "rust",
+        "rust-lint": "rust",
+        "rust-test": "rust"
+      },
+      "description": "Rust manifest discovery with lockfile",
+      "ecosystems": [
+        "rust"
+      ],
+      "expected_check_ids": [
+        "rust-build",
+        "rust-format",
+        "rust-lint",
+        "rust-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "Cargo.lock": "version = 4\n",
+        "Cargo.toml": "[package]\nname = \"discovery-fixture-14\"\nversion = \"0.1.0\"\nedition = \"2024\"\n"
+      },
+      "id": "rust-14",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "rust-build": "rust",
+        "rust-format": "rust",
+        "rust-lint": "rust",
+        "rust-test": "rust"
+      },
+      "description": "Rust manifest discovery",
+      "ecosystems": [
+        "rust"
+      ],
+      "expected_check_ids": [
+        "rust-build",
+        "rust-format",
+        "rust-lint",
+        "rust-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "Cargo.toml": "[package]\nname = \"discovery-fixture-15\"\nversion = \"0.1.0\"\nedition = \"2024\"\n",
+        "build.rs": "fn main() { std::fs::write(\"taskattest-rust-tripwire\", \"ran\").unwrap(); }\n"
+      },
+      "id": "rust-15",
+      "shape": "single-package",
+      "tripwire_paths": [
+        "taskattest-rust-tripwire"
+      ]
+    },
+    {
+      "check_ecosystems": {
+        "rust-build": "rust",
+        "rust-format": "rust",
+        "rust-lint": "rust",
+        "rust-test": "rust"
+      },
+      "description": "Rust manifest discovery with lockfile",
+      "ecosystems": [
+        "rust"
+      ],
+      "expected_check_ids": [
+        "rust-build",
+        "rust-format",
+        "rust-lint",
+        "rust-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "Cargo.lock": "version = 4\n",
+        "Cargo.toml": "[workspace]\nresolver = \"2\"\nmembers = [\"crates/core\"]\n\n[workspace.package]\nversion = \"0.1.0\"\n"
+      },
+      "id": "rust-16",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "rust-build": "rust",
+        "rust-format": "rust",
+        "rust-lint": "rust",
+        "rust-test": "rust"
+      },
+      "description": "Rust manifest discovery",
+      "ecosystems": [
+        "rust"
+      ],
+      "expected_check_ids": [
+        "rust-build",
+        "rust-format",
+        "rust-lint",
+        "rust-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "Cargo.toml": "[package]\nname = \"discovery-fixture-17\"\nversion = \"0.1.0\"\nedition = \"2024\"\n"
+      },
+      "id": "rust-17",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "rust-build": "rust",
+        "rust-format": "rust",
+        "rust-lint": "rust",
+        "rust-test": "rust"
+      },
+      "description": "Rust manifest discovery with lockfile",
+      "ecosystems": [
+        "rust"
+      ],
+      "expected_check_ids": [
+        "rust-build",
+        "rust-format",
+        "rust-lint",
+        "rust-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "Cargo.lock": "version = 4\n",
+        "Cargo.toml": "[package]\nname = \"discovery-fixture-18\"\nversion = \"0.1.0\"\nedition = \"2024\"\n"
+      },
+      "id": "rust-18",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "rust-build": "rust",
+        "rust-format": "rust",
+        "rust-lint": "rust",
+        "rust-test": "rust"
+      },
+      "description": "Rust manifest discovery",
+      "ecosystems": [
+        "rust"
+      ],
+      "expected_check_ids": [
+        "rust-build",
+        "rust-format",
+        "rust-lint",
+        "rust-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "Cargo.toml": "[package]\nname = \"discovery-fixture-19\"\nversion = \"0.1.0\"\nedition = \"2024\"\n"
+      },
+      "id": "rust-19",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "rust-build": "rust",
+        "rust-format": "rust",
+        "rust-lint": "rust",
+        "rust-test": "rust"
+      },
+      "description": "Rust manifest discovery with lockfile",
+      "ecosystems": [
+        "rust"
+      ],
+      "expected_check_ids": [
+        "rust-build",
+        "rust-format",
+        "rust-lint",
+        "rust-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "Cargo.lock": "version = 4\n",
+        "Cargo.toml": "[workspace]\nresolver = \"2\"\nmembers = [\"crates/core\"]\n\n[workspace.package]\nversion = \"0.1.0\"\n"
+      },
+      "id": "rust-20",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "go-build": "go",
+        "go-test": "go",
+        "go-vet": "go"
+      },
+      "description": "Go module discovery",
+      "ecosystems": [
+        "go"
+      ],
+      "expected_check_ids": [
+        "go-build",
+        "go-test",
+        "go-vet"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "go.mod": "module example.invalid/discovery/fixture01\n\ngo 1.23\n"
+      },
+      "id": "go-01",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "go-build": "go",
+        "go-test": "go",
+        "go-vet": "go"
+      },
+      "description": "Go module discovery with checksum file",
+      "ecosystems": [
+        "go"
+      ],
+      "expected_check_ids": [
+        "go-build",
+        "go-test",
+        "go-vet"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "go.mod": "module example.invalid/discovery/fixture02\n\ngo 1.23\n",
+        "go.sum": "example.invalid/dependency v0.0.0 h1:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\n"
+      },
+      "id": "go-02",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "go-build": "go",
+        "go-test": "go",
+        "go-vet": "go"
+      },
+      "description": "Go module discovery",
+      "ecosystems": [
+        "go"
+      ],
+      "expected_check_ids": [
+        "go-build",
+        "go-test",
+        "go-vet"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "go.mod": "module example.invalid/discovery/fixture03\n\ngo 1.23\n"
+      },
+      "id": "go-03",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "go-build": "go",
+        "go-test": "go",
+        "go-vet": "go"
+      },
+      "description": "Go module discovery with checksum file",
+      "ecosystems": [
+        "go"
+      ],
+      "expected_check_ids": [
+        "go-build",
+        "go-test",
+        "go-vet"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "go.mod": "module example.invalid/discovery/fixture04\n\ngo 1.23\n",
+        "go.sum": "example.invalid/dependency v0.0.0 h1:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\n"
+      },
+      "id": "go-04",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "go-build": "go",
+        "go-test": "go",
+        "go-vet": "go"
+      },
+      "description": "Go module discovery",
+      "ecosystems": [
+        "go"
+      ],
+      "expected_check_ids": [
+        "go-build",
+        "go-test",
+        "go-vet"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "go.mod": "module example.invalid/discovery/fixture05\n\ngo 1.23\n"
+      },
+      "id": "go-05",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "go-build": "go",
+        "go-test": "go",
+        "go-vet": "go"
+      },
+      "description": "Go module discovery with checksum file",
+      "ecosystems": [
+        "go"
+      ],
+      "expected_check_ids": [
+        "go-build",
+        "go-test",
+        "go-vet"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "go.mod": "module example.invalid/discovery/fixture06\n\ngo 1.23\n",
+        "go.sum": "example.invalid/dependency v0.0.0 h1:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\n"
+      },
+      "id": "go-06",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "go-build": "go",
+        "go-test": "go",
+        "go-vet": "go"
+      },
+      "description": "Go module discovery",
+      "ecosystems": [
+        "go"
+      ],
+      "expected_check_ids": [
+        "go-build",
+        "go-test",
+        "go-vet"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "go.mod": "module example.invalid/discovery/fixture07\n\ngo 1.23\n"
+      },
+      "id": "go-07",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "go-build": "go",
+        "go-test": "go",
+        "go-vet": "go"
+      },
+      "description": "Go module discovery with checksum file",
+      "ecosystems": [
+        "go"
+      ],
+      "expected_check_ids": [
+        "go-build",
+        "go-test",
+        "go-vet"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "go.mod": "module example.invalid/discovery/fixture08\n\ngo 1.23\n",
+        "go.sum": "example.invalid/dependency v0.0.0 h1:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\n"
+      },
+      "id": "go-08",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "go-build": "go",
+        "go-test": "go",
+        "go-vet": "go"
+      },
+      "description": "Go module discovery",
+      "ecosystems": [
+        "go"
+      ],
+      "expected_check_ids": [
+        "go-build",
+        "go-test",
+        "go-vet"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "go.mod": "module example.invalid/discovery/fixture09\n\ngo 1.23\n"
+      },
+      "id": "go-09",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "go-build": "go",
+        "go-test": "go",
+        "go-vet": "go"
+      },
+      "description": "Go module discovery with checksum file",
+      "ecosystems": [
+        "go"
+      ],
+      "expected_check_ids": [
+        "go-build",
+        "go-test",
+        "go-vet"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "go.mod": "module example.invalid/discovery/fixture10\n\ngo 1.23\n",
+        "go.sum": "example.invalid/dependency v0.0.0 h1:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\n"
+      },
+      "id": "go-10",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "go-build": "go",
+        "go-test": "go",
+        "go-vet": "go"
+      },
+      "description": "Go module discovery",
+      "ecosystems": [
+        "go"
+      ],
+      "expected_check_ids": [
+        "go-build",
+        "go-test",
+        "go-vet"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "go.mod": "module example.invalid/discovery/fixture11\n\ngo 1.23\n"
+      },
+      "id": "go-11",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "go-build": "go",
+        "go-test": "go",
+        "go-vet": "go"
+      },
+      "description": "Go module discovery with checksum file",
+      "ecosystems": [
+        "go"
+      ],
+      "expected_check_ids": [
+        "go-build",
+        "go-test",
+        "go-vet"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "go.mod": "module example.invalid/discovery/fixture12\n\ngo 1.23\n",
+        "go.sum": "example.invalid/dependency v0.0.0 h1:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\n"
+      },
+      "id": "go-12",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "go-build": "go",
+        "go-test": "go",
+        "go-vet": "go"
+      },
+      "description": "Go module discovery",
+      "ecosystems": [
+        "go"
+      ],
+      "expected_check_ids": [
+        "go-build",
+        "go-test",
+        "go-vet"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "go.mod": "module example.invalid/discovery/fixture13\n\ngo 1.23\n"
+      },
+      "id": "go-13",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "go-build": "go",
+        "go-test": "go",
+        "go-vet": "go"
+      },
+      "description": "Go module discovery with checksum file",
+      "ecosystems": [
+        "go"
+      ],
+      "expected_check_ids": [
+        "go-build",
+        "go-test",
+        "go-vet"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "go.mod": "module example.invalid/discovery/fixture14\n\ngo 1.23\n",
+        "go.sum": "example.invalid/dependency v0.0.0 h1:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\n"
+      },
+      "id": "go-14",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "go-build": "go",
+        "go-test": "go",
+        "go-vet": "go"
+      },
+      "description": "Go module discovery",
+      "ecosystems": [
+        "go"
+      ],
+      "expected_check_ids": [
+        "go-build",
+        "go-test",
+        "go-vet"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "go.mod": "module example.invalid/discovery/fixture15\n\ngo 1.23\n",
+        "tripwire_test.go": "package fixture\nimport (\"os\"; \"testing\")\nfunc TestTripwire(t *testing.T) { os.WriteFile(\"taskattest-go-tripwire\", []byte(\"ran\"), 0o600) }\n"
+      },
+      "id": "go-15",
+      "shape": "single-package",
+      "tripwire_paths": [
+        "taskattest-go-tripwire"
+      ]
+    },
+    {
+      "check_ecosystems": {
+        "go-build": "go",
+        "go-test": "go",
+        "go-vet": "go"
+      },
+      "description": "Go module discovery with checksum file",
+      "ecosystems": [
+        "go"
+      ],
+      "expected_check_ids": [
+        "go-build",
+        "go-test",
+        "go-vet"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "go.mod": "module example.invalid/discovery/fixture16\n\ngo 1.23\n",
+        "go.sum": "example.invalid/dependency v0.0.0 h1:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\n"
+      },
+      "id": "go-16",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "go-build": "go",
+        "go-test": "go",
+        "go-vet": "go"
+      },
+      "description": "Go module discovery",
+      "ecosystems": [
+        "go"
+      ],
+      "expected_check_ids": [
+        "go-build",
+        "go-test",
+        "go-vet"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "go.mod": "module example.invalid/discovery/fixture17\n\ngo 1.23\n"
+      },
+      "id": "go-17",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "go-build": "go",
+        "go-test": "go",
+        "go-vet": "go"
+      },
+      "description": "Go module discovery with checksum file",
+      "ecosystems": [
+        "go"
+      ],
+      "expected_check_ids": [
+        "go-build",
+        "go-test",
+        "go-vet"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "go.mod": "module example.invalid/discovery/fixture18\n\ngo 1.23\n",
+        "go.sum": "example.invalid/dependency v0.0.0 h1:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\n"
+      },
+      "id": "go-18",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "go-build": "go",
+        "go-test": "go",
+        "go-vet": "go"
+      },
+      "description": "Go module discovery",
+      "ecosystems": [
+        "go"
+      ],
+      "expected_check_ids": [
+        "go-build",
+        "go-test",
+        "go-vet"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "go.mod": "module example.invalid/discovery/fixture19\n\ngo 1.23\n"
+      },
+      "id": "go-19",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "go-build": "go",
+        "go-test": "go",
+        "go-vet": "go"
+      },
+      "description": "Go module discovery with checksum file",
+      "ecosystems": [
+        "go"
+      ],
+      "expected_check_ids": [
+        "go-build",
+        "go-test",
+        "go-vet"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "go.mod": "module example.invalid/discovery/fixture20\n\ngo 1.23\n",
+        "go.sum": "example.invalid/dependency v0.0.0 h1:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\n"
+      },
+      "id": "go-20",
+      "shape": "single-package",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "js-test": "javascript",
+        "python-ruff": "python"
+      },
+      "description": "JavaScript and Python root project",
+      "ecosystems": [
+        "javascript",
+        "python"
+      ],
+      "expected_check_ids": [
+        "js-test",
+        "python-ruff"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "package.json": "{\n  \"name\": \"discovery-fixture\",\n  \"private\": true,\n  \"scripts\": {\n    \"test\": \"node --test\"\n  }\n}\n",
+        "pyproject.toml": "[project]\nname = \"fixture\"\nversion = \"0.1.0\"\ndependencies = [\"ruff\"]\n"
+      },
+      "id": "mixed-01",
+      "shape": "mixed",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "js-lint": "javascript",
+        "rust-build": "rust",
+        "rust-format": "rust",
+        "rust-lint": "rust",
+        "rust-test": "rust"
+      },
+      "description": "JavaScript and Rust root project",
+      "ecosystems": [
+        "javascript",
+        "rust"
+      ],
+      "expected_check_ids": [
+        "js-lint",
+        "rust-build",
+        "rust-format",
+        "rust-lint",
+        "rust-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "Cargo.toml": "[package]\nname = \"discovery-fixture-21\"\nversion = \"0.1.0\"\nedition = \"2024\"\n",
+        "package.json": "{\n  \"name\": \"discovery-fixture\",\n  \"private\": true,\n  \"scripts\": {\n    \"lint\": \"eslint .\"\n  }\n}\n"
+      },
+      "id": "mixed-02",
+      "shape": "mixed",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "go-build": "go",
+        "go-test": "go",
+        "go-vet": "go",
+        "js-build": "javascript"
+      },
+      "description": "JavaScript and Go root project",
+      "ecosystems": [
+        "javascript",
+        "go"
+      ],
+      "expected_check_ids": [
+        "go-build",
+        "go-test",
+        "go-vet",
+        "js-build"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "go.mod": "module example.invalid/discovery/fixture21\n\ngo 1.23\n",
+        "package.json": "{\n  \"name\": \"discovery-fixture\",\n  \"private\": true,\n  \"scripts\": {\n    \"build\": \"tsc\"\n  }\n}\n"
+      },
+      "id": "mixed-03",
+      "shape": "mixed",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "python-mypy": "python",
+        "rust-build": "rust",
+        "rust-format": "rust",
+        "rust-lint": "rust",
+        "rust-test": "rust"
+      },
+      "description": "Python and Rust root project",
+      "ecosystems": [
+        "python",
+        "rust"
+      ],
+      "expected_check_ids": [
+        "python-mypy",
+        "rust-build",
+        "rust-format",
+        "rust-lint",
+        "rust-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "Cargo.toml": "[package]\nname = \"discovery-fixture-22\"\nversion = \"0.1.0\"\nedition = \"2024\"\n",
+        "pyproject.toml": "[project]\nname = \"fixture\"\nversion = \"0.1.0\"\ndependencies = [\"mypy\"]\n"
+      },
+      "id": "mixed-04",
+      "shape": "mixed",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "go-build": "go",
+        "go-test": "go",
+        "go-vet": "go",
+        "python-test": "python"
+      },
+      "description": "Python and Go root project",
+      "ecosystems": [
+        "python",
+        "go"
+      ],
+      "expected_check_ids": [
+        "go-build",
+        "go-test",
+        "go-vet",
+        "python-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "go.mod": "module example.invalid/discovery/fixture22\n\ngo 1.23\n",
+        "pyproject.toml": "[project]\nname = \"fixture\"\nversion = \"0.1.0\"\ndependencies = [\"pytest\"]\n"
+      },
+      "id": "mixed-05",
+      "shape": "mixed",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "go-build": "go",
+        "go-test": "go",
+        "go-vet": "go",
+        "rust-build": "rust",
+        "rust-format": "rust",
+        "rust-lint": "rust",
+        "rust-test": "rust"
+      },
+      "description": "Rust and Go root project",
+      "ecosystems": [
+        "rust",
+        "go"
+      ],
+      "expected_check_ids": [
+        "go-build",
+        "go-test",
+        "go-vet",
+        "rust-build",
+        "rust-format",
+        "rust-lint",
+        "rust-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "Cargo.toml": "[package]\nname = \"discovery-fixture-23\"\nversion = \"0.1.0\"\nedition = \"2024\"\n",
+        "go.mod": "module example.invalid/discovery/fixture23\n\ngo 1.23\n"
+      },
+      "id": "mixed-06",
+      "shape": "mixed",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "go-build": "go",
+        "go-test": "go",
+        "go-vet": "go",
+        "js-test": "javascript",
+        "js-typecheck": "javascript",
+        "python-ruff": "python",
+        "python-test": "python",
+        "rust-build": "rust",
+        "rust-format": "rust",
+        "rust-lint": "rust",
+        "rust-test": "rust"
+      },
+      "description": "all four root ecosystems",
+      "ecosystems": [
+        "javascript",
+        "python",
+        "rust",
+        "go"
+      ],
+      "expected_check_ids": [
+        "go-build",
+        "go-test",
+        "go-vet",
+        "js-test",
+        "js-typecheck",
+        "python-ruff",
+        "python-test",
+        "rust-build",
+        "rust-format",
+        "rust-lint",
+        "rust-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        "Cargo.toml": "[workspace]\nresolver = \"2\"\nmembers = [\"crates/core\"]\n\n[workspace.package]\nversion = \"0.1.0\"\n",
+        "go.mod": "module example.invalid/discovery/fixture24\n\ngo 1.23\n",
+        "package.json": "{\n  \"name\": \"discovery-fixture\",\n  \"private\": true,\n  \"scripts\": {\n    \"test\": \"node --test\",\n    \"typecheck\": \"tsc --noEmit\"\n  }\n}\n",
+        "pyproject.toml": "[project]\nname = \"fixture\"\nversion = \"0.1.0\"\ndependencies = [\"pytest\", \"ruff\"]\n"
+      },
+      "id": "mixed-07",
+      "shape": "mixed",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "js-test": "javascript"
+      },
+      "description": "safe workflow command matches a package check",
+      "ecosystems": [
+        "javascript"
+      ],
+      "expected_check_ids": [
+        "js-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        ".github/workflows/ci.yml": "name: Discovery corpus\non: push\njobs:\n  quality:\n    runs-on: ubuntu-latest\n    steps:\n      - name: Test\n        run: \"npm run test\"\n",
+        "package.json": "{\n  \"name\": \"discovery-fixture\",\n  \"private\": true,\n  \"scripts\": {\n    \"test\": \"node --test\"\n  }\n}\n"
+      },
+      "id": "mixed-08",
+      "shape": "mixed",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "go-build": "go",
+        "go-test": "go",
+        "go-vet": "go"
+      },
+      "description": "unsafe workflow verification is a coverage gap and is not run",
+      "ecosystems": [
+        "go",
+        "workflow"
+      ],
+      "expected_check_ids": [
+        "go-build",
+        "go-test",
+        "go-vet"
+      ],
+      "expected_coverage_gaps": [
+        "verification workflow step is not safely modeled: .github/workflows/ci.yml#quality#Test tripwire"
+      ],
+      "files": {
+        ".github/workflows/ci.yml": "name: Discovery corpus\non: push\njobs:\n  quality:\n    runs-on: ubuntu-latest\n    steps:\n      - name: Test tripwire\n        run: \"python3 -c \\\"from pathlib import Path; Path('discovery-workflow-tripwire').write_text('ran')\\\"\"\n",
+        "go.mod": "module example.invalid/discovery/fixture25\n\ngo 1.23\n"
+      },
+      "id": "mixed-09",
+      "shape": "mixed",
+      "tripwire_paths": [
+        "discovery-workflow-tripwire"
+      ]
+    },
+    {
+      "check_ecosystems": {
+        "ci-test-86739763": "rust"
+      },
+      "description": "safe workflow-only Rust check",
+      "ecosystems": [
+        "rust",
+        "workflow"
+      ],
+      "expected_check_ids": [
+        "ci-test-86739763"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        ".github/workflows/ci.yml": "name: Discovery corpus\non: push\njobs:\n  quality:\n    runs-on: ubuntu-latest\n    steps:\n      - name: Test\n        run: \"cargo test --locked\"\n"
+      },
+      "id": "mixed-10",
+      "shape": "mixed",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "mono-js-test": "javascript"
+      },
+      "description": "explicit argv-only checks for nested packages",
+      "ecosystems": [
+        "javascript"
+      ],
+      "expected_check_ids": [
+        "mono-js-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        ".taskattest.toml": "version = 1\n\n[[checks]]\nid = \"mono-js-test\"\nlabel = \"JavaScript package tests\"\nkind = \"test\"\ncommand = [\"npm\", \"run\", \"test\"]\nworking_directory = \"packages/web\"\nreason = \"the monorepo declares an explicit argv-only package check\"\ncoverage_paths = [\"packages/web/**\"]\n",
+        "packages/web/package.json": "{\n  \"name\": \"discovery-fixture\",\n  \"private\": true,\n  \"scripts\": {\n    \"test\": \"node --test\"\n  }\n}\n"
+      },
+      "id": "monorepo-01",
+      "shape": "monorepo",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "mono-python-test": "python"
+      },
+      "description": "explicit argv-only checks for nested packages",
+      "ecosystems": [
+        "python"
+      ],
+      "expected_check_ids": [
+        "mono-python-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        ".taskattest.toml": "version = 1\n\n[[checks]]\nid = \"mono-python-test\"\nlabel = \"Python package tests\"\nkind = \"test\"\ncommand = [\"python3\", \"-m\", \"pytest\"]\nworking_directory = \"packages/api\"\nreason = \"the monorepo declares an explicit argv-only package check\"\ncoverage_paths = [\"packages/api/**\"]\n",
+        "packages/api/pyproject.toml": "[project]\nname = \"api\"\nversion = \"0.1.0\"\ndependencies = [\"pytest\"]\n"
+      },
+      "id": "monorepo-02",
+      "shape": "monorepo",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "mono-rust-test": "rust"
+      },
+      "description": "explicit argv-only checks for nested packages",
+      "ecosystems": [
+        "rust"
+      ],
+      "expected_check_ids": [
+        "mono-rust-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        ".taskattest.toml": "version = 1\n\n[[checks]]\nid = \"mono-rust-test\"\nlabel = \"Rust package tests\"\nkind = \"test\"\ncommand = [\"cargo\", \"test\", \"--locked\"]\nworking_directory = \"crates/core\"\nreason = \"the monorepo declares an explicit argv-only package check\"\ncoverage_paths = [\"crates/core/**\"]\n",
+        "crates/core/Cargo.toml": "[package]\nname = \"discovery-fixture-31\"\nversion = \"0.1.0\"\nedition = \"2024\"\n"
+      },
+      "id": "monorepo-03",
+      "shape": "monorepo",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "mono-go-test": "go"
+      },
+      "description": "explicit argv-only checks for nested packages",
+      "ecosystems": [
+        "go"
+      ],
+      "expected_check_ids": [
+        "mono-go-test"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        ".taskattest.toml": "version = 1\n\n[[checks]]\nid = \"mono-go-test\"\nlabel = \"Go package tests\"\nkind = \"test\"\ncommand = [\"go\", \"test\", \"./...\"]\nworking_directory = \"services/api\"\nreason = \"the monorepo declares an explicit argv-only package check\"\ncoverage_paths = [\"services/api/**\"]\n",
+        "services/api/go.mod": "module example.invalid/discovery/fixture31\n\ngo 1.23\n"
+      },
+      "id": "monorepo-04",
+      "shape": "monorepo",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "mono-js-lint": "javascript",
+        "mono-python-lint": "python"
+      },
+      "description": "explicit argv-only checks for nested packages",
+      "ecosystems": [
+        "javascript",
+        "python"
+      ],
+      "expected_check_ids": [
+        "mono-js-lint",
+        "mono-python-lint"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        ".taskattest.toml": "version = 1\n\n[[checks]]\nid = \"mono-js-lint\"\nlabel = \"JavaScript package lint\"\nkind = \"lint\"\ncommand = [\"npm\", \"run\", \"lint\"]\nworking_directory = \"packages/web\"\nreason = \"the monorepo declares an explicit argv-only package check\"\ncoverage_paths = [\"packages/web/**\"]\n\n[[checks]]\nid = \"mono-python-lint\"\nlabel = \"Python package lint\"\nkind = \"lint\"\ncommand = [\"python3\", \"-m\", \"ruff\", \"check\", \".\"]\nworking_directory = \"packages/api\"\nreason = \"the monorepo declares an explicit argv-only package check\"\ncoverage_paths = [\"packages/api/**\"]\n",
+        "packages/api/pyproject.toml": "[project]\nname = \"api\"\nversion = \"0.1.0\"\ndependencies = [\"ruff\"]\n",
+        "packages/web/package.json": "{\n  \"name\": \"discovery-fixture\",\n  \"private\": true,\n  \"scripts\": {\n    \"lint\": \"eslint .\"\n  }\n}\n"
+      },
+      "id": "monorepo-05",
+      "shape": "monorepo",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "mono-go-build": "go",
+        "mono-rust-build": "rust"
+      },
+      "description": "explicit argv-only checks for nested packages",
+      "ecosystems": [
+        "rust",
+        "go"
+      ],
+      "expected_check_ids": [
+        "mono-go-build",
+        "mono-rust-build"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        ".taskattest.toml": "version = 1\n\n[[checks]]\nid = \"mono-rust-build\"\nlabel = \"Rust package build\"\nkind = \"build\"\ncommand = [\"cargo\", \"build\", \"--locked\"]\nworking_directory = \"crates/core\"\nreason = \"the monorepo declares an explicit argv-only package check\"\ncoverage_paths = [\"crates/core/**\"]\n\n[[checks]]\nid = \"mono-go-build\"\nlabel = \"Go service build\"\nkind = \"build\"\ncommand = [\"go\", \"build\", \"./...\"]\nworking_directory = \"services/api\"\nreason = \"the monorepo declares an explicit argv-only package check\"\ncoverage_paths = [\"services/api/**\"]\n",
+        "crates/core/Cargo.toml": "[workspace]\nresolver = \"2\"\nmembers = [\"crates/core\"]\n\n[workspace.package]\nversion = \"0.1.0\"\n",
+        "services/api/go.mod": "module example.invalid/discovery/fixture32\n\ngo 1.23\n"
+      },
+      "id": "monorepo-06",
+      "shape": "monorepo",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "mono-js-typecheck": "javascript",
+        "mono-rust-lint": "rust"
+      },
+      "description": "explicit argv-only checks for nested packages",
+      "ecosystems": [
+        "javascript",
+        "rust"
+      ],
+      "expected_check_ids": [
+        "mono-js-typecheck",
+        "mono-rust-lint"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        ".taskattest.toml": "version = 1\n\n[[checks]]\nid = \"mono-js-typecheck\"\nlabel = \"JavaScript package types\"\nkind = \"type_check\"\ncommand = [\"npm\", \"run\", \"typecheck\"]\nworking_directory = \"packages/web\"\nreason = \"the monorepo declares an explicit argv-only package check\"\ncoverage_paths = [\"packages/web/**\"]\n\n[[checks]]\nid = \"mono-rust-lint\"\nlabel = \"Rust package lint\"\nkind = \"lint\"\ncommand = [\"cargo\", \"clippy\", \"--all-targets\"]\nworking_directory = \"crates/core\"\nreason = \"the monorepo declares an explicit argv-only package check\"\ncoverage_paths = [\"crates/core/**\"]\n",
+        "crates/core/Cargo.toml": "[package]\nname = \"discovery-fixture-33\"\nversion = \"0.1.0\"\nedition = \"2024\"\n",
+        "packages/web/package.json": "{\n  \"name\": \"discovery-fixture\",\n  \"private\": true,\n  \"scripts\": {\n    \"typecheck\": \"tsc --noEmit\"\n  }\n}\n"
+      },
+      "id": "monorepo-07",
+      "shape": "monorepo",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "mono-go-vet": "go",
+        "mono-python-types": "python"
+      },
+      "description": "explicit argv-only checks for nested packages",
+      "ecosystems": [
+        "python",
+        "go"
+      ],
+      "expected_check_ids": [
+        "mono-go-vet",
+        "mono-python-types"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        ".taskattest.toml": "version = 1\n\n[[checks]]\nid = \"mono-python-types\"\nlabel = \"Python package types\"\nkind = \"type_check\"\ncommand = [\"python3\", \"-m\", \"mypy\", \".\"]\nworking_directory = \"packages/api\"\nreason = \"the monorepo declares an explicit argv-only package check\"\ncoverage_paths = [\"packages/api/**\"]\n\n[[checks]]\nid = \"mono-go-vet\"\nlabel = \"Go service vet\"\nkind = \"lint\"\ncommand = [\"go\", \"vet\", \"./...\"]\nworking_directory = \"services/api\"\nreason = \"the monorepo declares an explicit argv-only package check\"\ncoverage_paths = [\"services/api/**\"]\n",
+        "packages/api/pyproject.toml": "[project]\nname = \"api\"\nversion = \"0.1.0\"\ndependencies = [\"mypy\"]\n",
+        "services/api/go.mod": "module example.invalid/discovery/fixture33\n\ngo 1.23\n"
+      },
+      "id": "monorepo-08",
+      "shape": "monorepo",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "mono-go-test-all": "go",
+        "mono-js-test-all": "javascript",
+        "mono-python-test-all": "python",
+        "mono-rust-test-all": "rust"
+      },
+      "description": "explicit argv-only checks for nested packages",
+      "ecosystems": [
+        "javascript",
+        "python",
+        "rust",
+        "go"
+      ],
+      "expected_check_ids": [
+        "mono-go-test-all",
+        "mono-js-test-all",
+        "mono-python-test-all",
+        "mono-rust-test-all"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        ".taskattest.toml": "version = 1\n\n[[checks]]\nid = \"mono-js-test-all\"\nlabel = \"JavaScript package tests\"\nkind = \"test\"\ncommand = [\"npm\", \"run\", \"test\"]\nworking_directory = \"packages/web\"\nreason = \"the monorepo declares an explicit argv-only package check\"\ncoverage_paths = [\"packages/web/**\"]\n\n[[checks]]\nid = \"mono-python-test-all\"\nlabel = \"Python package tests\"\nkind = \"test\"\ncommand = [\"python3\", \"-m\", \"pytest\"]\nworking_directory = \"packages/api\"\nreason = \"the monorepo declares an explicit argv-only package check\"\ncoverage_paths = [\"packages/api/**\"]\n\n[[checks]]\nid = \"mono-rust-test-all\"\nlabel = \"Rust package tests\"\nkind = \"test\"\ncommand = [\"cargo\", \"test\"]\nworking_directory = \"crates/core\"\nreason = \"the monorepo declares an explicit argv-only package check\"\ncoverage_paths = [\"crates/core/**\"]\n\n[[checks]]\nid = \"mono-go-test-all\"\nlabel = \"Go service tests\"\nkind = \"test\"\ncommand = [\"go\", \"test\", \"./...\"]\nworking_directory = \"services/go-api\"\nreason = \"the monorepo declares an explicit argv-only package check\"\ncoverage_paths = [\"services/go-api/**\"]\n",
+        "crates/core/Cargo.toml": "[package]\nname = \"discovery-fixture-34\"\nversion = \"0.1.0\"\nedition = \"2024\"\n",
+        "packages/api/pyproject.toml": "[project]\nname = \"api\"\nversion = \"0.1.0\"\ndependencies = [\"pytest\"]\n",
+        "packages/web/package.json": "{\n  \"name\": \"discovery-fixture\",\n  \"private\": true,\n  \"scripts\": {\n    \"test\": \"node --test\"\n  }\n}\n",
+        "services/go-api/go.mod": "module example.invalid/discovery/fixture34\n\ngo 1.23\n"
+      },
+      "id": "monorepo-09",
+      "shape": "monorepo",
+      "tripwire_paths": []
+    },
+    {
+      "check_ecosystems": {
+        "mono-python-quality": "python"
+      },
+      "description": "explicit argv-only checks for nested packages",
+      "ecosystems": [
+        "python"
+      ],
+      "expected_check_ids": [
+        "mono-python-quality"
+      ],
+      "expected_coverage_gaps": [],
+      "files": {
+        ".taskattest.toml": "version = 1\n\n[[checks]]\nid = \"mono-python-quality\"\nlabel = \"Python package quality\"\nkind = \"custom\"\ncommand = [\"python3\", \"-m\", \"compileall\", \".\"]\nworking_directory = \"packages/worker\"\nreason = \"the monorepo declares an explicit argv-only package check\"\ncoverage_paths = [\"packages/worker/**\"]\n",
+        "packages/worker/pyproject.toml": "[project]\nname = \"worker\"\nversion = \"0.1.0\"\n"
+      },
+      "id": "monorepo-10",
+      "shape": "monorepo",
+      "tripwire_paths": []
+    }
+  ],
+  "labeling_methodology": "Expected check IDs and coverage gaps are hand-labeled from declared verification intent; generator logic only serializes those labels.",
+  "license": "MIT",
+  "requirements": {
+    "minimum_mixed_projects": 10,
+    "minimum_monorepo_projects": 10,
+    "minimum_precision": 0.95,
+    "minimum_projects": 100,
+    "minimum_projects_per_ecosystem": 20,
+    "minimum_recall": 0.9
+  },
+  "schema_version": "taskattest.discovery-corpus/v0.1"
+}

@@ -1,0 +1,83 @@
+{
+  "accuracy": {
+    "overall": {
+      "expected": 262,
+      "false_negative": 0,
+      "false_positive": 0,
+      "precision": 1.0,
+      "predicted": 262,
+      "recall": 1.0,
+      "true_positive": 262
+    },
+    "per_ecosystem": {
+      "go": {
+        "expected": 79,
+        "false_negative": 0,
+        "false_positive": 0,
+        "precision": 1.0,
+        "predicted": 79,
+        "recall": 1.0,
+        "true_positive": 79
+      },
+      "javascript": {
+        "expected": 38,
+        "false_negative": 0,
+        "false_positive": 0,
+        "precision": 1.0,
+        "predicted": 38,
+        "recall": 1.0,
+        "true_positive": 38
+      },
+      "python": {
+        "expected": 44,
+        "false_negative": 0,
+        "false_positive": 0,
+        "precision": 1.0,
+        "predicted": 44,
+        "recall": 1.0,
+        "true_positive": 44
+      },
+      "rust": {
+        "expected": 101,
+        "false_negative": 0,
+        "false_positive": 0,
+        "precision": 1.0,
+        "predicted": 101,
+        "recall": 1.0,
+        "true_positive": 101
+      }
+    }
+  },
+  "check_mismatches": [],
+  "corpus": {
+    "schema_version": "taskattest.discovery-corpus/v0.1",
+    "sha256": "bf345b547d25d1b492588dc16ee14db3c7f21b85eba27b07bd35afa9df36a8aa"
+  },
+  "coverage_gap_mismatches": [],
+  "projects": {
+    "by_ecosystem": {
+      "go": 29,
+      "javascript": 29,
+      "python": 29,
+      "rust": 29,
+      "workflow": 2
+    },
+    "by_shape": {
+      "mixed": 10,
+      "monorepo": 10,
+      "single-package": 80
+    },
+    "total": 100
+  },
+  "requirements": {
+    "minimum_mixed_projects": 10,
+    "minimum_monorepo_projects": 10,
+    "minimum_precision": 0.95,
+    "minimum_projects": 100,
+    "minimum_projects_per_ecosystem": 20,
+    "minimum_recall": 0.9
+  },
+  "schema_version": "taskattest.discovery-metrics/v0.1",
+  "tripwire_failures": [],
+  "violations": []
+}

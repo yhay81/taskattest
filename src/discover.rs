@@ -676,7 +676,7 @@ fn javascript_coverage() -> Vec<String> {
 }
 
 fn discover_python(git: &GitContext) -> Result<Vec<CheckDefinition>, TaskError> {
-    let mut corpus = String::new();
+    let mut evidence = PythonToolEvidence::default();
     let mut sources = Vec::new();
     for path in [
         "pyproject.toml",
@@ -691,20 +691,17 @@ fn discover_python(git: &GitContext) -> Result<Vec<CheckDefinition>, TaskError> 
         if path == "pyproject.toml" {
             let document: toml::Value = toml::from_str(&text)
                 .map_err(|error| TaskError::discovery(format!("parse pyproject.toml: {error}")))?;
-            let normalized = serde_json::to_string(&document).map_err(|error| {
-                TaskError::discovery(format!("normalize pyproject.toml evidence: {error}"))
-            })?;
-            corpus.push_str(&normalized.to_ascii_lowercase());
-        } else {
+            collect_pyproject_evidence(&document, &mut evidence);
+        } else if path.starts_with("requirements") {
             for line in text.lines() {
-                let evidence = line.split('#').next().unwrap_or("").trim();
-                if !evidence.is_empty() {
-                    corpus.push_str(&evidence.to_ascii_lowercase());
-                    corpus.push('\n');
+                let requirement = line.split('#').next().unwrap_or("").trim();
+                if let Some(distribution) = python_distribution_name(requirement) {
+                    evidence.record_distribution(&distribution);
                 }
             }
+        } else if path == "tox.ini" {
+            evidence.tox = true;
         }
-        corpus.push('\n');
         sources.push(discovery_source(
             &git.root,
             path,
@@ -713,7 +710,7 @@ fn discover_python(git: &GitContext) -> Result<Vec<CheckDefinition>, TaskError> 
     }
     let coverage = python_coverage();
     let mut checks = Vec::new();
-    if corpus.contains("pytest") {
+    if evidence.pytest {
         checks.push(language_check(
             "python-test",
             "Python tests",
@@ -728,7 +725,7 @@ fn discover_python(git: &GitContext) -> Result<Vec<CheckDefinition>, TaskError> 
                 "host operating system and services used by tests",
             ],
         ));
-    } else if git.root.join("tox.ini").is_file() {
+    } else if evidence.tox {
         checks.push(language_check(
             "python-test",
             "Python tox environments",
@@ -741,7 +738,7 @@ fn discover_python(git: &GitContext) -> Result<Vec<CheckDefinition>, TaskError> 
             &["Python interpreter, tox, and installed environments"],
         ));
     }
-    if corpus.contains("ruff") {
+    if evidence.ruff {
         checks.push(language_check(
             "python-ruff",
             "Python Ruff lints",
@@ -754,7 +751,7 @@ fn discover_python(git: &GitContext) -> Result<Vec<CheckDefinition>, TaskError> 
             &["Python interpreter and installed environment"],
         ));
     }
-    if corpus.contains("mypy") {
+    if evidence.mypy {
         checks.push(language_check(
             "python-mypy",
             "Python mypy type checking",
@@ -768,6 +765,145 @@ fn discover_python(git: &GitContext) -> Result<Vec<CheckDefinition>, TaskError> 
         ));
     }
     Ok(checks)
+}
+
+#[derive(Default)]
+struct PythonToolEvidence {
+    pytest: bool,
+    tox: bool,
+    ruff: bool,
+    mypy: bool,
+}
+
+impl PythonToolEvidence {
+    fn record_distribution(&mut self, distribution: &str) {
+        match distribution {
+            "pytest" => self.pytest = true,
+            "tox" => self.tox = true,
+            "ruff" => self.ruff = true,
+            "mypy" => self.mypy = true,
+            _ if distribution.starts_with("pytest-") => self.pytest = true,
+            _ => {}
+        }
+    }
+}
+
+fn collect_pyproject_evidence(document: &toml::Value, evidence: &mut PythonToolEvidence) {
+    let Some(root) = document.as_table() else {
+        return;
+    };
+    if let Some(project) = root.get("project").and_then(toml::Value::as_table) {
+        collect_requirement_array(project.get("dependencies"), evidence);
+        if let Some(groups) = project
+            .get("optional-dependencies")
+            .and_then(toml::Value::as_table)
+        {
+            for requirements in groups.values() {
+                collect_requirement_array(Some(requirements), evidence);
+            }
+        }
+    }
+    if let Some(groups) = root
+        .get("dependency-groups")
+        .and_then(toml::Value::as_table)
+    {
+        for requirements in groups.values() {
+            collect_requirement_array(Some(requirements), evidence);
+        }
+    }
+    let Some(tool) = root.get("tool").and_then(toml::Value::as_table) else {
+        return;
+    };
+    evidence.pytest |= tool.contains_key("pytest");
+    evidence.ruff |= tool.contains_key("ruff");
+    evidence.mypy |= tool.contains_key("mypy");
+    evidence.tox |= tool.contains_key("tox");
+
+    if let Some(poetry) = tool.get("poetry").and_then(toml::Value::as_table) {
+        collect_dependency_table(poetry.get("dependencies"), evidence);
+        collect_dependency_table(poetry.get("dev-dependencies"), evidence);
+        if let Some(groups) = poetry.get("group").and_then(toml::Value::as_table) {
+            for group in groups.values().filter_map(toml::Value::as_table) {
+                collect_dependency_table(group.get("dependencies"), evidence);
+            }
+        }
+    }
+    if let Some(uv) = tool.get("uv").and_then(toml::Value::as_table) {
+        collect_requirement_array(uv.get("dev-dependencies"), evidence);
+    }
+    if let Some(pdm) = tool.get("pdm").and_then(toml::Value::as_table) {
+        if let Some(groups) = pdm.get("dev-dependencies").and_then(toml::Value::as_table) {
+            for requirements in groups.values() {
+                collect_requirement_array(Some(requirements), evidence);
+            }
+        }
+    }
+    if let Some(hatch) = tool.get("hatch").and_then(toml::Value::as_table) {
+        if let Some(environments) = hatch.get("envs").and_then(toml::Value::as_table) {
+            for environment in environments.values().filter_map(toml::Value::as_table) {
+                collect_requirement_array(environment.get("dependencies"), evidence);
+            }
+        }
+    }
+}
+
+fn collect_requirement_array(value: Option<&toml::Value>, evidence: &mut PythonToolEvidence) {
+    let Some(requirements) = value.and_then(toml::Value::as_array) else {
+        return;
+    };
+    for requirement in requirements.iter().filter_map(toml::Value::as_str) {
+        if let Some(distribution) = python_distribution_name(requirement) {
+            evidence.record_distribution(&distribution);
+        }
+    }
+}
+
+fn collect_dependency_table(value: Option<&toml::Value>, evidence: &mut PythonToolEvidence) {
+    let Some(dependencies) = value.and_then(toml::Value::as_table) else {
+        return;
+    };
+    for distribution in dependencies.keys() {
+        evidence.record_distribution(&normalize_python_distribution(distribution));
+    }
+}
+
+fn python_distribution_name(requirement: &str) -> Option<String> {
+    let requirement = requirement.trim();
+    if requirement.is_empty() || requirement.starts_with(['-', '.', '/', '\\']) {
+        return None;
+    }
+    let name_source = if let Some((distribution, reference)) = requirement.split_once('@') {
+        let reference = reference.trim();
+        if reference.contains("://") || reference.starts_with("git+") {
+            distribution.trim()
+        } else {
+            requirement
+        }
+    } else if requirement.contains("://") || requirement.starts_with("git+") {
+        return None;
+    } else {
+        requirement
+    };
+    let name = name_source
+        .chars()
+        .take_while(|character| character.is_ascii_alphanumeric() || "-_.".contains(*character))
+        .collect::<String>();
+    (!name.is_empty()).then(|| normalize_python_distribution(&name))
+}
+
+fn normalize_python_distribution(value: &str) -> String {
+    let mut normalized = String::new();
+    let mut separator = false;
+    for character in value.chars() {
+        if character.is_ascii_alphanumeric() {
+            normalized.push(character.to_ascii_lowercase());
+            separator = false;
+        } else if matches!(character, '-' | '_' | '.') && !separator {
+            normalized.push('-');
+            separator = true;
+        }
+    }
+    normalized.trim_matches('-').to_owned()
 }
 
 fn python_coverage() -> Vec<String> {
@@ -1370,5 +1506,87 @@ mod tests {
             "Require subtitle capability on Linux",
             "python3 - <<'PY'\nraise SystemExit(1)\nPY",
         ));
+    }
+
+    #[test]
+    fn python_evidence_uses_declared_tools_not_substrings() {
+        let document: toml::Value = toml::from_str(
+            r#"
+[project]
+name = "scruffy"
+version = "0.1.0"
+description = "The words pytest, Ruff, and mypy are documentation, not tool declarations"
+dependencies = ["mypy-boto3-s3>=1", "scruffy>=0.3"]
+
+[build-system]
+requires = ["ruff-build-helper>=1"]
+"#,
+        )
+        .expect("parse fixture");
+        let mut evidence = PythonToolEvidence::default();
+        collect_pyproject_evidence(&document, &mut evidence);
+        assert!(!evidence.pytest);
+        assert!(!evidence.ruff);
+        assert!(!evidence.mypy);
+        assert!(!evidence.tox);
+    }
+
+    #[test]
+    fn python_evidence_covers_standard_and_common_dependency_groups() {
+        let document: toml::Value = toml::from_str(
+            r#"
+[project]
+name = "fixture"
+version = "0.1.0"
+optional-dependencies.test = ["pytest-cov>=5"]
+
+[dependency-groups]
+quality = ["ruff>=0.5"]
+
+[tool.poetry.group.types.dependencies]
+mypy = "^1.10"
+
+[tool.poetry.dev-dependencies]
+pytest = "^8"
+
+[tool.tox]
+legacy_tox_ini = """
+[testenv]
+commands = pytest
+"""
+"#,
+        )
+        .expect("parse fixture");
+        let mut evidence = PythonToolEvidence::default();
+        collect_pyproject_evidence(&document, &mut evidence);
+        assert!(evidence.pytest);
+        assert!(evidence.ruff);
+        assert!(evidence.mypy);
+        assert!(evidence.tox);
+    }
+
+    #[test]
+    fn python_requirement_names_are_pep503_normalized() {
+        assert_eq!(
+            python_distribution_name("PyTest_Cov[all]>=5; python_version >= '3.10'"),
+            Some("pytest-cov".to_owned())
+        );
+        assert_eq!(
+            python_distribution_name("ruff @ https://example.invalid/ruff.whl"),
+            Some("ruff".to_owned())
+        );
+        assert_eq!(
+            python_distribution_name("mypy-boto3-s3>=1"),
+            Some("mypy-boto3-s3".to_owned())
+        );
+        assert_eq!(python_distribution_name("-r base.txt"), None);
+        assert_eq!(
+            python_distribution_name("https://example.invalid/tool.whl"),
+            None
+        );
+        assert_eq!(
+            python_distribution_name("ruff://example.invalid/tool"),
+            None
+        );
     }
 }
