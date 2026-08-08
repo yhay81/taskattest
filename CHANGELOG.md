@@ -17,6 +17,9 @@ semantic versioning.
   and Intel, and Windows x86_64 using the published instructions.
 - Enforced the published v1.0 discovery, offline-verification, and peak-memory
   thresholds from 20-sample, warm-start benchmark evidence on Ubuntu 24.04.
+- Added a deterministic, MIT-licensed discovery corpus with 100 hand-labeled
+  projects, per-ecosystem TP/FP/FN metrics, exact coverage-gap assertions, and
+  no-execution tripwires.
 
 ### Fixed
 
@@ -30,6 +33,9 @@ semantic versioning.
   for the final receipt.
 - Rejected performance evidence with a non-canonical commit identity,
   incomplete runner metadata, a non-raw sample marker, or reused sample paths.
+- Replaced substring matching across serialized Python metadata with structured
+  dependency and tool-table evidence, avoiding false positives such as
+  `scruffy` and `mypy-boto3-s3`.
 
 ## [0.3.0] - 2026-07-29
 

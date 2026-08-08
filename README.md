@@ -42,6 +42,15 @@ published v1 receipt shape and digest derivation. CI checks exact round trips,
 offline verification, byte-level fixture digests, and declared reader and
 semantic tampering cases on every supported operating system.
 
+The versioned
+[discovery accuracy corpus](tests/fixtures/discovery/README.md) contains 100
+hand-labeled projects: 20 single-package fixtures for each initial ecosystem,
+10 mixed projects, and 10 explicitly configured monorepos. Its independent
+evaluator publishes overall and per-ecosystem TP/FP/FN, enforces at least 95%
+precision and 90% recall, checks exact coverage gaps, and uses tripwires to
+prove discovery did not execute repository commands. The pinned v0.1 result is
+100% precision and 100% recall over 262 expected checks.
+
 Performance observations use a generated 10,000-file, 100-check Git workspace
 and a complete 100-check receipt. The
 [benchmark methodology](benchmarks/README.md) documents fixture construction,
@@ -150,8 +159,8 @@ cargo package --locked --allow-dirty
 The test suite covers source mutation, failed checks, timeout and process-tree
 cleanup, log retention, receipt tampering and duplicate-key ambiguity,
 pre-execution output refusal, post-execution no-retry recovery, no-clobber
-publication, CI replacement mapping, and discovery across all four initial
-ecosystems.
+publication, CI replacement mapping, structured Python dependency evidence,
+and labeled discovery accuracy across all four initial ecosystems.
 
 ## Release integrity
 

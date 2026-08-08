@@ -20,13 +20,15 @@ binding, no-clobber evidence storage, and independent verification.
 
 ## 0.2 discovery quality
 
-- Benchmark corpus with labeled expected checks across all four ecosystems.
+- [x] Benchmark corpus with labeled expected checks across all four
+  ecosystems.
 - [x] Deterministic 10,000-file, 100-check performance fixture with weekly raw
   discovery, verification, output-size, and peak-memory artifacts.
 - Monorepo/workspace package graphs and changed-path dependency propagation.
 - More task runners and CI providers without arbitrary configuration
   evaluation.
-- Precision/recall reports and regression fixtures for every heuristic.
+- [x] Precision/recall reports and regression fixtures for every current
+  heuristic.
 - Platform and matrix conditions represented explicitly in observations.
 
 ## 0.3 portable evidence
@@ -92,6 +94,16 @@ unchanged.
   redaction, no-clobber publication, receipt integrity, and offline
   verification; all critical and high findings are resolved.
 - No known critical or high-severity vulnerability is open at release time.
+
+Current evidence: the MIT-licensed `taskattest.discovery-corpus/v0.1` contains
+100 deterministic, hand-labeled projects: 20 single-package fixtures for each
+initial ecosystem, 10 mixed-root projects, and 10 explicitly configured
+monorepos. The independent evaluator records 262/262 true positives with zero
+false positives or false negatives (100% precision and recall overall), and
+publishes separate JavaScript, Python, Rust, and Go metrics. Exact
+coverage-gap labels and package-script, build-script, test, and workflow
+tripwires are enforced in CI. Automatic monorepo package-graph discovery
+remains roadmap work and is not implied by these results.
 
 ### Performance and bounds
 
