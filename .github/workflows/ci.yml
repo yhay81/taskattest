@@ -28,7 +28,7 @@ jobs:
         run: cargo package --locked --allow-dirty
       - name: v1 evidence gate tests
         run: python3 -m unittest discover -s scripts/tests -p 'test_verify_v1_evidence.py'
-      - name: v1 evidence structure
+      - name: v1 evidence schema
         run: python3 scripts/verify_v1_evidence.py .github/v1-evidence.json --check-structure
       - name: Contract fixtures
         run: |

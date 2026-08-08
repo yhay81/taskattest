@@ -69,5 +69,5 @@ coverage_paths = [
 pass_environment = []
 non_hermetic_inputs = ["installed Python interpreter"]
 replaces_workflow_steps = [
-  ".github/workflows/ci.yml#quality#v1 evidence structure",
+  ".github/workflows/ci.yml#quality#v1 evidence schema",
 ]
