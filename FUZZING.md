@@ -2,7 +2,8 @@
 
 TaskAttest continuously fuzzes its untrusted receipt boundary with
 AddressSanitizer. The `receipt_document` target exercises the production size
-bound, JSON decoding, typed schema, and lossless unknown-or-omitted-field check.
+bound, recursive duplicate-key rejection, JSON decoding, typed schema, and
+lossless unknown-or-omitted-field check.
 
 Install a current nightly toolchain and the pinned local runner, then run:
 

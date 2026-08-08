@@ -1,7 +1,11 @@
+use std::collections::BTreeSet;
+use std::fmt;
 use std::fs::{File, OpenOptions};
 use std::io::Read;
 use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicU64, Ordering};
+
+use serde::de::{DeserializeSeed, Error as _, MapAccess, SeqAccess, Visitor};
 
 use crate::error::TaskError;
 use crate::git::GitContext;
@@ -22,8 +26,11 @@ pub fn parse_receipt_document(bytes: &[u8]) -> Result<Receipt, TaskError> {
     if u64::try_from(bytes.len()).unwrap_or(u64::MAX) > MAX_RECEIPT_BYTES {
         return Err(TaskError::receipt("receipt exceeds the 4 MiB safety bound"));
     }
+    // Typed deserialization rejects duplicate struct fields but map fields
+    // otherwise retain the last value, so inspect every object first.
+    reject_duplicate_object_keys(bytes)?;
+    let receipt: Receipt = serde_json::from_slice(bytes).map_err(TaskError::from)?;
     let document: serde_json::Value = serde_json::from_slice(bytes).map_err(TaskError::from)?;
-    let receipt: Receipt = serde_json::from_value(document.clone()).map_err(TaskError::from)?;
     let normalized = serde_json::to_value(&receipt)?;
     if document != normalized {
         return Err(TaskError::receipt(
@@ -31,6 +38,109 @@ pub fn parse_receipt_document(bytes: &[u8]) -> Result<Receipt, TaskError> {
         ));
     }
     Ok(receipt)
+}
+
+fn reject_duplicate_object_keys(bytes: &[u8]) -> Result<(), TaskError> {
+    let mut deserializer = serde_json::Deserializer::from_slice(bytes);
+    DuplicateKeySeed
+        .deserialize(&mut deserializer)
+        .map_err(TaskError::from)?;
+    deserializer.end().map_err(TaskError::from)
+}
+
+#[derive(Clone, Copy)]
+struct DuplicateKeySeed;
+
+impl<'de> DeserializeSeed<'de> for DuplicateKeySeed {
+    type Value = ();
+
+    fn deserialize<D>(self, deserializer: D) -> Result<Self::Value, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        deserializer.deserialize_any(DuplicateKeyVisitor)
+    }
+}
+
+struct DuplicateKeyVisitor;
+
+impl<'de> Visitor<'de> for DuplicateKeyVisitor {
+    type Value = ();
+
+    fn expecting(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("a JSON value without duplicate object keys")
+    }
+
+    fn visit_bool<E>(self, _value: bool) -> Result<Self::Value, E> {
+        Ok(())
+    }
+
+    fn visit_i64<E>(self, _value: i64) -> Result<Self::Value, E> {
+        Ok(())
+    }
+
+    fn visit_u64<E>(self, _value: u64) -> Result<Self::Value, E> {
+        Ok(())
+    }
+
+    fn visit_f64<E>(self, _value: f64) -> Result<Self::Value, E> {
+        Ok(())
+    }
+
+    fn visit_str<E>(self, _value: &str) -> Result<Self::Value, E> {
+        Ok(())
+    }
+
+    fn visit_string<E>(self, _value: String) -> Result<Self::Value, E> {
+        Ok(())
+    }
+
+    fn visit_none<E>(self) -> Result<Self::Value, E> {
+        Ok(())
+    }
+
+    fn visit_unit<E>(self) -> Result<Self::Value, E> {
+        Ok(())
+    }
+
+    fn visit_some<D>(self, deserializer: D) -> Result<Self::Value, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        DuplicateKeySeed.deserialize(deserializer)
+    }
+
+    fn visit_newtype_struct<D>(self, deserializer: D) -> Result<Self::Value, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        DuplicateKeySeed.deserialize(deserializer)
+    }
+
+    fn visit_seq<A>(self, mut sequence: A) -> Result<Self::Value, A::Error>
+    where
+        A: SeqAccess<'de>,
+    {
+        while sequence.next_element_seed(DuplicateKeySeed)?.is_some() {}
+        Ok(())
+    }
+
+    fn visit_map<A>(self, mut map: A) -> Result<Self::Value, A::Error>
+    where
+        A: MapAccess<'de>,
+    {
+        let mut keys = BTreeSet::new();
+        while let Some(key) = map.next_key::<String>()? {
+            if keys.contains(&key) {
+                return Err(A::Error::custom(format!(
+                    "duplicate JSON object key {key:?}"
+                )));
+            }
+            keys.insert(key);
+            map.next_value_seed(DuplicateKeySeed)?;
+        }
+        Ok(())
+    }
 }
 
 #[derive(Clone, Debug)]
