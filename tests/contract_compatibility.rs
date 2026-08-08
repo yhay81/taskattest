@@ -6,7 +6,7 @@ use serde_json::Value;
 use taskattest::execute::build_receipt;
 use taskattest::model::Receipt;
 use taskattest::source::sha256_bytes;
-use taskattest::store::StateStore;
+use taskattest::store::{StateStore, parse_receipt_document};
 use taskattest::verify::verify_receipt;
 
 fn corpus_root() -> PathBuf {
@@ -219,4 +219,66 @@ fn declared_v1_mutations_fail_closed() {
             other => panic!("unsupported rejection stage {other}"),
         }
     }
+
+    for case in manifest["raw_rejections"]
+        .as_array()
+        .expect("raw rejection corpus entries")
+    {
+        let id = case["id"].as_str().expect("raw rejection id");
+        assert!(
+            rejection_ids.insert(id.to_owned()),
+            "duplicate rejection id {id}"
+        );
+        let base_path = root.join(case["base"].as_str().expect("base fixture"));
+        let document = fs::read_to_string(&base_path).unwrap_or_else(|error| {
+            panic!("read raw rejection base {}: {error}", base_path.display())
+        });
+        let needle = case["needle"].as_str().expect("raw rejection needle");
+        assert_eq!(
+            document.matches(needle).count(),
+            1,
+            "raw rejection {id} needle must identify exactly one location"
+        );
+        let replacement = case["replacement"]
+            .as_str()
+            .expect("raw rejection replacement");
+        assert_ne!(
+            replacement, needle,
+            "raw rejection {id} must change the document"
+        );
+        let mutated = document.replacen(needle, replacement, 1);
+
+        let error =
+            parse_receipt_document(mutated.as_bytes()).expect_err("raw mutation must be rejected");
+        assert_eq!(
+            error.code,
+            case["expected_error_code"].as_str().expect("error code"),
+            "rejection {id}: {}",
+            case["reason"].as_str().expect("rejection reason")
+        );
+    }
+}
+
+#[test]
+fn self_consistent_receipt_rejects_duplicate_annotation_keys() {
+    let bytes = fs::read(corpus_root().join("receipt.incomplete.json")).expect("read base receipt");
+    let mut receipt = parse_receipt_document(&bytes).expect("parse base receipt");
+    receipt
+        .payload
+        .annotations
+        .insert("review".to_owned(), "approved".to_owned());
+    let rebound = build_receipt(receipt.payload).expect("rebind annotated receipt");
+    let serialized = serde_json::to_string_pretty(&rebound).expect("serialize annotated receipt");
+    let needle = "    \"review\": \"approved\"";
+    assert_eq!(serialized.matches(needle).count(), 1);
+    let ambiguous = serialized.replacen(
+        needle,
+        "    \"review\": \"rejected\",\n    \"review\": \"approved\"",
+        1,
+    );
+
+    let error =
+        parse_receipt_document(ambiguous.as_bytes()).expect_err("duplicate annotation must fail");
+    assert_eq!(error.code, "json_invalid");
+    assert!(error.message.contains("duplicate JSON object key"));
 }

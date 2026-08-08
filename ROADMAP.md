@@ -62,10 +62,10 @@ do not substitute for accurate discovery, bounded execution, or real use.
 Current evidence: v0.2 and v0.3 provide two released compatibility cycles. The
 current v0.3 verifier accepts the digest-pinned v1 receipt corpus byte-for-byte
 and preserves canonical digest, receipt-ID, and offline semantic verification.
-Ten declared mutations cover strict reader shape, identity, schema, source,
-timing, and outcome failures, including self-consistent attacker-recomputed
-digests. The v0.2 and v0.3 release notes record contract preservation; no
-migration is required.
+Thirteen declared mutations cover strict reader shape, duplicate-key
+ambiguity, identity, schema, source, timing, and outcome failures, including
+self-consistent attacker-recomputed digests. The v0.2 and v0.3 release notes
+record contract preservation; no migration is required.
 
 Standalone receipt publication is preflighted before checks run. A late
 destination race preserves the primary durable receipt, returns it on stdout,
