@@ -22,3 +22,50 @@ non_hermetic_inputs = ["installed Python interpreter"]
 replaces_workflow_steps = [
   ".github/workflows/ci.yml#quality#Contract fixtures",
 ]
+
+[[checks]]
+id = "v1-evidence-tests"
+label = "v1 evidence gate tests"
+kind = "test"
+command = [
+  "python3",
+  "-m",
+  "unittest",
+  "discover",
+  "-s",
+  "scripts/tests",
+  "-p",
+  "test_verify_v1_evidence.py",
+]
+working_directory = "."
+reason = "the v1 evidence policy must be covered by executable regression tests"
+coverage_paths = [
+  "scripts/tests/test_verify_v1_evidence.py",
+  "scripts/verify_v1_evidence.py",
+  ".github/v1-evidence.json",
+]
+pass_environment = []
+non_hermetic_inputs = ["installed Python interpreter"]
+replaces_workflow_steps = []
+
+[[checks]]
+id = "v1-evidence-structure"
+label = "v1 evidence structure"
+kind = "test"
+command = [
+  "python3",
+  "scripts/verify_v1_evidence.py",
+  ".github/v1-evidence.json",
+  "--check-structure",
+]
+working_directory = "."
+reason = "the committed v1 evidence document must retain its required structure"
+coverage_paths = [
+  "scripts/verify_v1_evidence.py",
+  ".github/v1-evidence.json",
+]
+pass_environment = []
+non_hermetic_inputs = ["installed Python interpreter"]
+replaces_workflow_steps = [
+  ".github/workflows/ci.yml#quality#v1 evidence schema",
+]
