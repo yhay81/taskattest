@@ -64,7 +64,7 @@ jobs:
           test -z "$(git -C "${fixture}" status --porcelain)"
       - name: TaskAttest receipt dogfood
         run: cargo run --quiet --locked -- run --check contract-fixtures --check rust-format --check rust-lint --check rust-test --check rust-build --receipt-out "${RUNNER_TEMP}/taskattest-ci-receipt.json" --format json
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: taskattest-ci-receipt
           path: ${{ runner.temp }}/taskattest-ci-receipt.json
