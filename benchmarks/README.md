@@ -12,8 +12,7 @@ distinct stdout blobs plus the shared empty stderr blob. The synthetic fixture,
 generator, and outputs are covered by the repository's MIT license.
 
 Each raw sample performs untimed setup by running all 100 checks and writing a
-receipt to an external state directory. The workflow performs one discarded
-warm-up followed by 20 measured samples. Each sample measures, in this order:
+receipt to an external state directory. Five Ubuntu runners each discard one warm-up and capture four sequential samples, for 20 measured samples in total. Each sample measures, in this order:
 
 1. discover and select all 100 checks while hashing the 10,000-file workspace;
 2. verify the 100-check receipt and all 200 stdout/stderr references offline.

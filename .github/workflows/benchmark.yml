@@ -12,8 +12,8 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  benchmark:
-    name: Enforce performance thresholds
+  build:
+    name: Build release benchmark binary
     runs-on: ubuntu-24.04
     timeout-minutes: 1
     steps:
@@ -24,16 +24,75 @@ jobs:
         run: |
           rustup toolchain install stable --profile minimal
           rustup default stable
-      - name: Test benchmark evaluator
-        run: python3 -m unittest benchmarks/test_evaluate.py
+      - run: cargo build --release --locked
+      - name: Archive the release binary with its executable mode
+        run: tar -czf benchmark-binary.tar.gz -C target/release taskattest
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: benchmark-binary
+          path: benchmark-binary.tar.gz
+          retention-days: 1
+          if-no-files-found: error
+          overwrite: true
+
+  samples:
+    name: Measure benchmark shard ${{ matrix.shard }}
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 1
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3, 4]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: benchmark-binary
+          path: ${{ runner.temp }}/benchmark-tool
+      - name: Extract the release binary
+        run: |
+          tar -xzf "$RUNNER_TEMP/benchmark-tool/benchmark-binary.tar.gz" -C "$RUNNER_TEMP/benchmark-tool"
+          echo "BENCHMARK_BINARY=$RUNNER_TEMP/benchmark-tool/taskattest" >> "$GITHUB_ENV"
       - name: Warm benchmark fixture and code paths
         run: benchmarks/run.sh /tmp/taskattest-benchmark-warmup.json
-      - name: Capture 20 raw benchmark samples
+      - name: Capture four raw samples
+        env:
+          SHARD: ${{ matrix.shard }}
         run: |
           mkdir -p benchmark-samples
-          for sample in $(seq -w 1 20); do
-            benchmarks/run.sh "benchmark-samples/sample-${sample}.json"
+          for sample in $(seq "$((SHARD * 4 + 1))" "$((SHARD * 4 + 4))"); do
+            printf -v path 'benchmark-samples/sample-%02d.json' "$sample"
+            benchmarks/run.sh "$path"
           done
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: ${{ always() && hashFiles('benchmark-samples/*.json') != '' }}
+        with:
+          name: raw-samples-${{ matrix.shard }}
+          path: benchmark-samples/sample-*.json
+          retention-days: 1
+          if-no-files-found: error
+          overwrite: true
+
+  benchmark:
+    name: Enforce performance thresholds
+    needs: samples
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 1
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Test benchmark evaluator
+        run: python3 -m unittest benchmarks/test_evaluate.py
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          pattern: raw-samples-*
+          merge-multiple: true
+          path: benchmark-samples
       - name: Enforce v1.0 performance thresholds
         run: |
           baseline_args=()
@@ -46,7 +105,7 @@ jobs:
             --output benchmark-results.json \
             benchmark-samples/sample-*.json
       - name: Upload raw measurements and evaluation
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: taskattest-benchmark-${{ github.run_id }}
           path: |

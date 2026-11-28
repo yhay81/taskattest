@@ -5,7 +5,7 @@ export LC_ALL=C
 
 root_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 result_path="${1:-${root_dir}/benchmark-results.json}"
-binary="${root_dir}/target/release/taskattest"
+binary="${BENCHMARK_BINARY:-${root_dir}/target/release/taskattest}"
 generator="${root_dir}/benchmarks/generate_workspace.py"
 
 for dependency in cargo git jq python3 stat timeout uname; do
@@ -33,7 +33,10 @@ verify_metrics="${temp_dir}/verify.metrics.json"
 verify_output="${temp_dir}/verify.output.json"
 
 cd "${root_dir}"
-cargo build --release --locked
+if [[ -z "${BENCHMARK_BINARY:-}" ]]; then
+  cargo build --release --locked
+fi
+test -x "${binary}"
 python3 "${generator}" --files 10000 --checks 100 --output "${workspace}"
 
 "${binary}" \
