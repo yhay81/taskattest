@@ -1,8 +1,6 @@
 name: ClusterFuzzLite corpus pruning
 
 on:
-  schedule:
-    - cron: "17 9 * * 1"
   workflow_dispatch:
 
 permissions: {}
